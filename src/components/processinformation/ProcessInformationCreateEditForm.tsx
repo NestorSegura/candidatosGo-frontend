@@ -16,13 +16,13 @@ const ProcessInformationCreateEditForm: React.FC<ProcessInformationCreateEditFor
 
     const [processInformation, setProcessInformation] = useState<UIProcessInformation>();
     const [interviewDate, setInteviewDate] = useState<Date>();
-    const [preselected, setPreselected] = useState<boolean>(!!processInformation?.preSelected);
-    const [preselectedComments, setPreselectedComments] = useState<string>(processInformation?.preselectedComments as string);
-    const [assitedToObservation, setAssistedToObservation] = useState<boolean>(false);
+    const [preselected, setPreselected] = useState<string>();
+    const [preselectedComments, setPreselectedComments] = useState<string>();
+    const [asistedToObservation, setAsistedToObservation] = useState<string>();
     const [observationDay, setObservationDay] = useState<Date>();
     const [observationDayComments, setObservationDayComments] = useState<string>();
     const [trainer, setTrainer] = useState<string>();
-    const [admited, setAdmited] = useState<boolean>(false);
+    const [admited, setAdmited] = useState<string>();
     const [admissionComments, setAdmissionComments] = useState<string>();
     const [down, setDown] = useState<boolean>(false);
     const [downDate, setDownDate] = useState<Date>();
@@ -35,18 +35,18 @@ const ProcessInformationCreateEditForm: React.FC<ProcessInformationCreateEditFor
             if (response.parsedBody && !deepEqual(response.parsedBody.data, processInformation)) {
                 setProcessInformation(response.parsedBody.data)
             }
-            setPreselected(!!processInformation?.preSelected);
-            if(checkNullString(processInformation?.interviewDate)) setInteviewDate(moment.utc(processInformation?.interviewDate,  ["DDD-MM-YYYY"]).toDate());
-            setAssistedToObservation(!!processInformation?.assistedToObservation);
-            if(checkNullString(processInformation?.preselectedComments)) setPreselectedComments(processInformation?.preselectedComments as string)
-            if(checkNullString(processInformation?.observationDate)) setObservationDay(moment.utc(processInformation?.observationDate, ["DDD-MM-YYYY"]).toDate());
-            if(checkNullString(processInformation?.observationComments))setObservationDayComments(processInformation?.observationComments);
-            if(checkNullString(processInformation?.trainer))setTrainer(processInformation?.trainer);
-            setAdmited(!!processInformation?.admited);
-            if(checkNullString(processInformation?.admitionComments))setAdmissionComments(processInformation?.admitionComments);
+            if (checkNullString(processInformation?.preSelected)) setPreselected(processInformation?.preSelected);
+            if (checkNullString(processInformation?.interviewDate)) setInteviewDate(moment.utc(processInformation?.interviewDate, ["DDD-MM-YYYY"]).toDate());
+            if (checkNullString(processInformation?.assistedToObservation)) setAsistedToObservation(processInformation?.assistedToObservation);
+            if (checkNullString(processInformation?.preselectedComments)) setPreselectedComments(processInformation?.preselectedComments as string)
+            if (checkNullString(processInformation?.observationDate)) setObservationDay(moment.utc(processInformation?.observationDate, ["DDD-MM-YYYY"]).toDate());
+            if (checkNullString(processInformation?.observationComments)) setObservationDayComments(processInformation?.observationComments);
+            if (checkNullString(processInformation?.trainer)) setTrainer(processInformation?.trainer);
+            if (checkNullString(processInformation?.admited)) setAdmited(processInformation?.admited);
+            if (checkNullString(processInformation?.admitionComments)) setAdmissionComments(processInformation?.admitionComments);
             setDown(!!processInformation?.down);
-            if(checkNullString(processInformation?.downComments))setDownComments(processInformation?.downComments);
-            if(checkNullString(processInformation?.downDate)) setDownDate(moment.utc(processInformation?.downDate, ["DDD-MM-YYYY"]).toDate());
+            if (checkNullString(processInformation?.downComments)) setDownComments(processInformation?.downComments);
+            if (checkNullString(processInformation?.downDate)) setDownDate(moment.utc(processInformation?.downDate, ["DDD-MM-YYYY"]).toDate());
         }
         fetchData();
     }, [processInformation, props.candidateId])
@@ -57,7 +57,7 @@ const ProcessInformationCreateEditForm: React.FC<ProcessInformationCreateEditFor
             interviewDate: interviewDate?.toDateString(),
             preSelected: preselected,
             preselectedComments: preselectedComments,
-            assistedToObservation: assitedToObservation,
+            assistedToObservation: asistedToObservation,
             observationDate: observationDay?.toDateString(),
             observationComments: observationDayComments,
             trainer: trainer,
@@ -69,12 +69,12 @@ const ProcessInformationCreateEditForm: React.FC<ProcessInformationCreateEditFor
             candidateId: props.candidateId
         }
         if (processInformation?.id) {
-            newProcessInformation.id = processInformation.id
-            await ProcessInformationService.updateProcessInformation(newProcessInformation)
+            newProcessInformation.id = processInformation.id;
+            await ProcessInformationService.updateProcessInformation(newProcessInformation);
         } else {
-            const response = await ProcessInformationService.saveProcessInformation<UIProcessInformation>(newProcessInformation)
-            if(response.parsedBody?.data) {
-                setProcessInformation(response.parsedBody?.data)
+            const response = await ProcessInformationService.saveProcessInformation<UIProcessInformation>(newProcessInformation);
+            if (response.parsedBody?.data) {
+                setProcessInformation(response.parsedBody?.data);
             }
         }
     }
@@ -95,13 +95,30 @@ const ProcessInformationCreateEditForm: React.FC<ProcessInformationCreateEditFor
                 <hr className="mt-4 mb-4 col-12 col-sm-6 "/>
 
                 <div className="col-12 col-sm-6  d-flex mb-3">
+                    <p className="me-3">Preselecionado: </p>
+                    <div className="form-check me-3">
+                        <input className="form-check-input"
+                               type="radio"
+                               name="preselected"
+                               id="preselected-yes"
+                               checked={preselected === 'si'}
+                               onChange={(e) => setPreselected(e.target.value)}
+                               value="si"/>
+                        <label className="form-check-label" htmlFor="preselected-yes">
+                            Sí
+                        </label>
+                    </div>
                     <div className="form-check">
                         <input className="form-check-input"
-                               type="checkbox"
-                               id="preselectedCheckbox"
-                               checked={preselected}
-                               onChange={(e) => setPreselected(e.target.checked)}/>
-                        <label htmlFor="preselectedCheckbox" className="form-check-label">pre-seleccionado: </label>
+                               type="radio"
+                               name="preselected"
+                               id="preselected-no"
+                               checked={preselected === 'no'}
+                               onChange={(e) => setPreselected(e.target.value)}
+                               value="no"/>
+                        <label className="form-check-label" htmlFor="preselected-no">
+                            No
+                        </label>
                     </div>
                 </div>
                 <div className="col-12 col-sm-6  mb-3">
@@ -124,17 +141,36 @@ const ProcessInformationCreateEditForm: React.FC<ProcessInformationCreateEditFor
                                 placeholderText="sin fecha aún"
                                 onChange={date => setObservationDay(date as Date)}/>
                 </div>
+
                 <div className="col-12 col-sm-6  d-flex mb-3">
+                    <p className="me-3">Asistió a la observación : </p>
+                    <div className="form-check me-3">
+                        <input className="form-check-input"
+                               type="radio"
+                               name="asistedToObservation"
+                               id="asistedToObservation-yes"
+                               checked={asistedToObservation === 'si'}
+                               onChange={(e) => setAsistedToObservation(e.target.value)}
+                               value="si"/>
+                        <label className="form-check-label" htmlFor="asistedToObservation-yes">
+                            Sí
+                        </label>
+                    </div>
                     <div className="form-check">
                         <input className="form-check-input"
-                               type="checkbox"
-                               checked={assitedToObservation}
-                               onChange={e => setAssistedToObservation(e.target.checked)}
-                               id="observationDayCheckbox"/>
-                        <label htmlFor="observationDayCheckbox" className="form-check-label">Asistió al día de
-                            observación </label>
+                               type="radio"
+                               name="asistedToObservation"
+                               id="asistedToObservation-no"
+                               checked={asistedToObservation === 'no'}
+                               onChange={(e) => setAsistedToObservation(e.target.value)}
+                               value="no"/>
+                        <label className="form-check-label" htmlFor="asistedToObservation-no">
+                            No
+                        </label>
                     </div>
                 </div>
+
+
                 <div className="col-12 col-sm-6  mb-3">
                     <label htmlFor="assistedToObservationComment" className="form-label">Comentario día de
                         observación</label>
@@ -144,7 +180,9 @@ const ProcessInformationCreateEditForm: React.FC<ProcessInformationCreateEditFor
                               value={observationDayComments}
                               onChange={e => setObservationDayComments(e.target.value)}/>
                 </div>
+
                 <hr className="mt-4 mb-4 col-12 col-sm-6 "/>
+
                 <div className="col-12 col-sm-6  mb-3 d-flex align-items-center">
                     <label htmlFor="trainerText" className="form-label me-3">Entrenador: </label>
                     <input type="text"
@@ -153,16 +191,35 @@ const ProcessInformationCreateEditForm: React.FC<ProcessInformationCreateEditFor
                            onChange={e => setTrainer(e.target.value)}
                            placeholder="nombre del entrenador"/>
                 </div>
+
                 <div className="col-12 col-sm-6  d-flex mb-3">
+                    <p className="me-3">Admitido: </p>
+                    <div className="form-check me-3">
+                        <input className="form-check-input"
+                               type="radio"
+                               name="admited"
+                               id="admited-yes"
+                               checked={admited === 'si'}
+                               onChange={(e) => setAdmited(e.target.value)}
+                               value="si"/>
+                        <label className="form-check-label" htmlFor="admited-yes">
+                            Sí
+                        </label>
+                    </div>
                     <div className="form-check">
                         <input className="form-check-input"
-                               type="checkbox"
-                               checked={admited}
-                               onChange={e => setAdmited(e.target.checked)}
-                               id="observationDayCheckbox"/>
-                        <label htmlFor="admisionCheckbox" className="form-check-label">Admitido</label>
+                               type="radio"
+                               name="admited"
+                               id="admited-no"
+                               checked={admited === 'no'}
+                               onChange={(e) => setAdmited(e.target.value)}
+                               value="no"/>
+                        <label className="form-check-label" htmlFor="admited-no">
+                            No
+                        </label>
                     </div>
                 </div>
+
                 <div className="col-12 col-sm-6  mb-3">
                     <label htmlFor="admisioncomments" className="form-label">Comentarios de admisión</label>
                     <textarea className="form-control"

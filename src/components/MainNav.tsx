@@ -1,7 +1,7 @@
 import * as React from "react";
 import {useContext, useEffect} from "react";
 import {AuthContext} from "./auth/AuthContext";
-import {Link, useHistory} from "react-router-dom";
+import {Link, useHistory, Redirect} from "react-router-dom";
 
 const MainNav: React.FC = () => {
     const {isLoggedIn, logout, usertype} = useContext(AuthContext);
@@ -9,13 +9,13 @@ const MainNav: React.FC = () => {
 
     const logOutHandler = () => {
         logout();
-        return history.push('/');
+        return <Redirect to='/' />;
     }
 
     let userRootRights = new Map<string, string[]>();
-    userRootRights.set('SYS_ADMIN', ['/usuarios']);
-    userRootRights.set('OFFICE', ['usuarios', 'candidatos', 'configuracion']);
-    userRootRights.set('ASISTENCE', ['/candidatos']);
+    userRootRights.set('SYS_ADMIN', ['usuarios']);
+    userRootRights.set('OFFICE', ['candidatos', 'usuarios', 'configuracion']);
+    userRootRights.set('ASISTENCE', ['candidatos']);
 
     const redirectHandler = () => {
         if (isLoggedIn) {

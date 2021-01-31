@@ -3,13 +3,13 @@ export interface UIProcessInformation {
     id?: number;
     registryTime: string;
     interviewDate?: string;
-    preSelected?: boolean;
+    preSelected?: string;
     preselectedComments?: string;
     observationDate?: string;
-    assistedToObservation?: boolean;
+    assistedToObservation?: string;
     observationComments?: string;
     trainer?: string;
-    admited?: boolean;
+    admited?: string;
     admitionComments?: string;
     down?: boolean;
     downDate?: string;

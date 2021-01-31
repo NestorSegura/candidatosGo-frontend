@@ -2,7 +2,7 @@ import * as React from 'react';
 import {useContext, useState} from 'react';
 import AuthService, {ErrorMessageResponse, LoginResponse} from "../services/auth.service";
 import {AuthContext, LocalStorageProps} from "./auth/AuthContext";
-import { useHistory } from 'react-router-dom';
+import { Redirect } from 'react-router-dom';
 
 const Login: React.FC = () => {
     const [username, setUsername] = useState<string>('');
@@ -10,7 +10,6 @@ const Login: React.FC = () => {
     const [error, setError] = useState<string>('');
 
     const {login} = useContext(AuthContext);
-    const history = useHistory();
 
     const handleLogin = async (e: React.MouseEvent) => {
         AuthService.login(username, password)
@@ -26,7 +25,8 @@ const Login: React.FC = () => {
                     login(localstorage);
 
                     setError('');
-                    history.push('/candidatos');
+                    return <Redirect to="/" />
+
                 } else {
                     response = response as ErrorMessageResponse
                     setError(response.msg)

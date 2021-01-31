@@ -16,8 +16,8 @@ const ProcessInformationCreateEditForm: React.FC<ProcessInformationCreateEditFor
 
     const [processInformation, setProcessInformation] = useState<UIProcessInformation>();
     const [interviewDate, setInteviewDate] = useState<Date>();
-    const [preselected, setPreselected] = useState<boolean>(false);
-    const [preselectedComments, setPreselectedComments] = useState<string>();
+    const [preselected, setPreselected] = useState<boolean>(!!processInformation?.preSelected);
+    const [preselectedComments, setPreselectedComments] = useState<string>(processInformation?.preselectedComments as string);
     const [assitedToObservation, setAssistedToObservation] = useState<boolean>(false);
     const [observationDay, setObservationDay] = useState<Date>();
     const [observationDayComments, setObservationDayComments] = useState<string>();
@@ -35,60 +35,21 @@ const ProcessInformationCreateEditForm: React.FC<ProcessInformationCreateEditFor
             if (response.parsedBody && !deepEqual(response.parsedBody.data, processInformation)) {
                 setProcessInformation(response.parsedBody.data)
             }
-
-            if(!interviewDate && checkNullString(processInformation?.interviewDate) && processInformation?.interviewDate) {
-                setInteviewDate(moment.utc(processInformation?.interviewDate,  ["DDD-MM-YYYY"]).toDate())
-            }
-
-            if(processInformation?.preSelected !== preselected) {
-                setPreselected(!!processInformation?.preSelected);
-            }
-
-            if(checkNullString(processInformation?.preselectedComments) && processInformation?.preselectedComments !== preselectedComments) {
-                setPreselectedComments(processInformation?.preselectedComments)
-            }
-
-            if(processInformation?.assistedToObservation !== assitedToObservation) {
-                setAssistedToObservation(!!processInformation?.assistedToObservation)
-            }
-
-            if(!observationDay && checkNullString(processInformation?.observationDate) && processInformation?.observationDate) {
-                setObservationDay(moment.utc(processInformation?.observationDate, ["DDD-MM-YYYY"]).toDate())
-            }
-
-            if(checkNullString(processInformation?.observationComments) && processInformation?.observationComments !== observationDayComments) {
-                setObservationDayComments(processInformation?.observationComments)
-            }
-
-            if(checkNullString(processInformation?.trainer) && processInformation?.trainer !== trainer) {
-                setTrainer(processInformation?.trainer);
-            }
-
-            if(processInformation?.admited !== admited) {
-                setAdmited(!!processInformation?.admited);
-            }
-
-            if(checkNullString(processInformation?.admitionComments) && processInformation?.admitionComments !== admissionComments) {
-                setAdmissionComments(processInformation?.admitionComments);
-            }
-
-            if(processInformation?.down !== down) {
-                setDown(!!processInformation?.down);
-            }
-
-            if(checkNullString(processInformation?.downComments) && processInformation?.downComments !== downComments) {
-                setDownComments(processInformation?.downComments)
-            }
-
-            if(!downDate && checkNullString(processInformation?.downDate) && processInformation?.downDate) {
-                //!observationDay && checkNullString(processInformation?.observationDate) && processInformation?.observationDate
-                console.log('set down date');
-                setDownDate(moment.utc(processInformation?.downDate, ["DDD-MM-YYYY"]).toDate())
-            }
-
+            setPreselected(!!processInformation?.preSelected);
+            if(checkNullString(processInformation?.interviewDate)) setInteviewDate(moment.utc(processInformation?.interviewDate,  ["DDD-MM-YYYY"]).toDate());
+            setAssistedToObservation(!!processInformation?.assistedToObservation);
+            if(checkNullString(processInformation?.preselectedComments)) setPreselectedComments(processInformation?.preselectedComments as string)
+            if(checkNullString(processInformation?.observationDate)) setObservationDay(moment.utc(processInformation?.observationDate, ["DDD-MM-YYYY"]).toDate());
+            if(checkNullString(processInformation?.observationComments))setObservationDayComments(processInformation?.observationComments);
+            if(checkNullString(processInformation?.trainer))setTrainer(processInformation?.trainer);
+            setAdmited(!!processInformation?.admited);
+            if(checkNullString(processInformation?.admitionComments))setAdmissionComments(processInformation?.admitionComments);
+            setDown(!!processInformation?.down);
+            if(checkNullString(processInformation?.downComments))setDownComments(processInformation?.downComments);
+            if(checkNullString(processInformation?.downDate)) setDownDate(moment.utc(processInformation?.downDate, ["DDD-MM-YYYY"]).toDate());
         }
         fetchData();
-    })
+    }, [processInformation, props.candidateId])
 
     async function saveChangesHandler() {
         const newProcessInformation: UIProcessInformation = {

@@ -93,10 +93,11 @@ const CreateUsersForm: React.FC = () => {
                 {allowdFileds ? <div className="col-12 col-sm-6">
                     <label htmlFor="usertype" className="form-label me-3">Tipo de usuario </label>
                     <select className="form-select" aria-label="Default select example" id="usertype"
-                            onChange={onUserTypeHandler} value={userType}>
-                        <option value="NO_VALID" disabled selected>Elegir tipo de usuario</option>
+                            onChange={onUserTypeHandler} defaultValue='NO_VALID'>
+                        <option value="NO_VALID" disabled>Elegir tipo de usuario</option>
                         {
-                            allowdFileds.map(field => <option value={field.value}>{field.label}</option>)
+                            allowdFileds.map((field, index) =>
+                                <option key={index} value={field.value}>{field.label}</option>)
                         }
                     </select>
                 </div> : null}

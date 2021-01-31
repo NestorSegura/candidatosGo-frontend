@@ -88,7 +88,7 @@ const ProcessInformationCreateEditForm: React.FC<ProcessInformationCreateEditFor
 
         }
         fetchData();
-    }, [processInformation])
+    })
 
     async function saveChangesHandler() {
         const newProcessInformation: UIProcessInformation = {

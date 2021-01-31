@@ -19,24 +19,6 @@ const CreateUsersForm: React.FC = () => {
 
     const {usertype} = useContext(AuthContext);
 
-    const userTypesFields: Fields[] = [
-        {
-            value: "SYS_ADMIN",
-            label: "Administrador de sistema",
-            allow: ['SYS_ADMIN']
-        },
-        {
-            value: "ASISTENCE",
-            label: "Secretario(a)",
-            allow: ['SYS_ADMIN', 'OFFICE']
-        },
-        {
-            value: "OFFICE",
-            label: "Gerente / Oficina",
-            allow: ['SYS_ADMIN', 'OFFICE']
-        }
-    ]
-
     function clearForm() {
         setUsername('');
         setPassword('');
@@ -64,10 +46,28 @@ const CreateUsersForm: React.FC = () => {
     }
 
     useEffect(() => {
+        const userTypesFields: Fields[] = [
+            {
+                value: "SYS_ADMIN",
+                label: "Administrador de sistema",
+                allow: ['SYS_ADMIN']
+            },
+            {
+                value: "ASISTENCE",
+                label: "Secretario(a)",
+                allow: ['SYS_ADMIN', 'OFFICE']
+            },
+            {
+                value: "OFFICE",
+                label: "Gerente / Oficina",
+                allow: ['SYS_ADMIN', 'OFFICE']
+            }
+        ]
         const allowedFields: Fields[] = userTypesFields.filter(field => {
             return field.allow.find(userTypeField => userTypeField === usertype)
         })
         setAllowedFields(allowedFields)
+
     }, [usertype])
 
     return (

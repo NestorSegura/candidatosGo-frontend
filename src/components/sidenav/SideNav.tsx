@@ -21,6 +21,8 @@ const SideNav: React.FC = () => {
                 setShowUsers(true);
                 setShowCandidates(false);
                 setShowConfiguration(false);
+                setShowDailyInteview(false);
+                setShowPendingForCall(false);
                 break;
             }
             case 'OFFICE': {
@@ -48,8 +50,11 @@ const SideNav: React.FC = () => {
         if (isLoggedIn && userType !== userTypeFromLocalStore) {
             setUserType(userTypeFromLocalStore as string);
         }
+    }, [isLoggedIn, userType])
+
+    useEffect(() => {
         renderContentForUserType();
-    }, [userType, showConfiguration, showUsers, showCandidates])
+    })
 
     return (
         <div className="col-md-3 col-lg-2 d-md-block bg-primary sidebar">

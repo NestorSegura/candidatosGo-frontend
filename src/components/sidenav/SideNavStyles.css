@@ -1,0 +1,28 @@
+.sidebar {
+    min-height: 100%;
+    padding-right: 0;
+    padding-left: 0;
+}
+.active {
+    background-color: #004085!important;
+}
+
+.nav {
+    padding-right: 0;
+}
+.sidebar .nav-link {
+    color: #fefefe;
+}
+
+.sidebar .nav-item {
+    border-bottom: 1px solid rgba(255,255,255,.3);
+    width: 100%;
+}
+
+.sidebar .nav .nav-item:last-child {
+    border-bottom: none;
+}
+
+.sidebar .nav-link:hover {
+    color: #dddddd;
+}

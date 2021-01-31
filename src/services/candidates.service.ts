@@ -2,7 +2,7 @@ import {httpFetch} from "./fetch";
 import {UICandidate} from "./models/UICandidate";
 
 const CandidatesService = {
-    basePath: 'http://localhost:7000',
+    basePath: process.env.BACKEND_URL || 'http://localhost:7000',
     searchCandidate: async <T>(phone1: string, email: string) => {
         return await httpFetch.post<T>(
             `${CandidatesService.basePath}/candidates/find`,

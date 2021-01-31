@@ -22,7 +22,7 @@ export interface LogoutResponse {
 }
 
 const AuthService = {
-    basePath: 'http://localhost:7000',
+    basePath: process.env.BACKEND_URL || 'http://localhost:7000',
     login: async (username: string, password: string) : Promise<LoginResponse | ErrorMessageResponse> => {
         const response = await fetch(`${AuthService.basePath}/login`, {
             method: 'POST',

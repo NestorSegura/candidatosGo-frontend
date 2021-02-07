@@ -11,7 +11,7 @@ const Login: React.FC = () => {
 
     const {login} = useContext(AuthContext);
 
-    const handleLogin = async (e: React.MouseEvent) => {
+    const handleLogin = async () => {
         AuthService.login(username, password)
             .then(response => {
                 if (response.success) {
@@ -34,7 +34,7 @@ const Login: React.FC = () => {
             })
             .catch(error => {
                 console.error(error);
-                setError(`TECNICAL ERROR ${error}`);
+                setError(`TECHNICAL ERROR ${error}`);
             });
     }
 

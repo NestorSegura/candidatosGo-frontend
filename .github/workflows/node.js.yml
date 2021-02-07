@@ -20,5 +20,5 @@ jobs:
       with:
         username: ${{ secrets.DOCKERHUB_USERNAME }}
         password: ${{ secrets.DOCKERHUB_TOKEN }}
-        dockerfile: curriculum-front/Dockerfile
-        tags: nestorsegura/candidatosgo
+        dockerfile: Dockerfile
+        tags: nestorsegura/candidatosgo_front:latest

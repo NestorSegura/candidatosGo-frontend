@@ -15,4 +15,4 @@ http.createServer((req, res) => {
         }
         res.end(content)
     })
-}).listen(httpPort)
+}).listen(httpPort, () => console.log('running on port: '+httpPort))

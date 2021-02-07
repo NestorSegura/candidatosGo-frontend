@@ -30,4 +30,4 @@ jobs:
           path: .
           file: Dockerfile
           push: true
-          tags: nestorsegura/candidatosgo:dev
+          tags: nestorsegura/candidatosgofront:latest

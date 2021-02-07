@@ -20,6 +20,5 @@ jobs:
       with:
         username: ${{ secrets.DOCKERHUB_USERNAME }}
         password: ${{ secrets.DOCKERHUB_TOKEN }}
-        repository: fuze365/curriculum-front
         dockerfile: curriculum-front/Dockerfile
         tags: nestorsegura/candidatosgo_front:latest

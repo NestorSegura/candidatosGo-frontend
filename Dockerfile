@@ -10,8 +10,6 @@ COPY . .
 
 RUN npm install
 
-COPY ./app .
-
 RUN ls
 
 RUN npm run build

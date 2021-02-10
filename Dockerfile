@@ -1,12 +1,32 @@
-FROM node:lts-alpine
-WORKDIR /usr/src/app
-COPY ./package*.json ./
-RUN ls -l
-RUN npm install
+# ---------- Base ----------
+FROM node:12-alpine AS base
+
+WORKDIR /app
+
+# ---------- Builder ----------
+FROM base AS builder
+
 COPY . .
-RUN ls -l
+
+RUN npm install
+
+COPY ./app .
+
+RUN ls
+
 RUN npm run build
-COPY ./nodeserver.js dist/nodeserver.js
-WORKDIR /usr/src/app/dist
+
+#RUN npm prune --production # Remove dev dependencies
+
+# ---------- Release ----------
+FROM base AS release
+
+COPY --from=builder /app/build ./build
+
+COPY ./nodeserver.js build/nodeserver.js
+
+USER node
+
 EXPOSE 8080
+
 CMD [ "node", "nodeserver.js" ]

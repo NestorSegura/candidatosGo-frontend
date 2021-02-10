@@ -19,9 +19,9 @@ RUN npm run build
 # ---------- Release ----------
 FROM base AS release
 
-COPY --from=builder /app/build ./build
+COPY --from=builder /app/build ./
 
-COPY ./nodeserver.js build/nodeserver.js
+COPY ./nodeserver.js ./nodeserver.js
 
 USER node
 

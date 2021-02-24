@@ -1,8 +1,9 @@
 import * as React from "react";
-import {useState} from "react";
+import {useContext, useState} from "react";
 import CandidatesService from "../../services/candidates.service";
 import {useHistory} from "react-router-dom";
 import {UICandidate} from "../../services/models/UICandidate";
+import {AuthContext} from "../auth/AuthContext";
 
 interface CandidatosSearchFormProps {
     setCandidates: (candidates: UICandidate[]) => void
@@ -20,6 +21,8 @@ const CandidatosSearchForm: React.FC<CandidatosSearchFormProps> = (props: Candid
     const [resultMessage, setResultMessage] = useState<string>("");
 
     const history = useHistory();
+
+    const {officeId} = useContext(AuthContext);
 
     const onSearchClickHandler = (e: React.MouseEvent) => {
         e.preventDefault();
@@ -46,7 +49,7 @@ const CandidatosSearchForm: React.FC<CandidatosSearchFormProps> = (props: Candid
             phone1,
             phone2,
             dni,
-            office_id: 'somethign'
+            office_id: officeId
         }
         CandidatesService.saveCandidate<UICandidate>(newCandidate)
             .then(response => {

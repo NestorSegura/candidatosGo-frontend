@@ -17,7 +17,7 @@ const CreateUsersForm: React.FC = () => {
     const [msg, setMsg] = useState<string>();
     const [allowdFileds, setAllowedFields] = useState<Fields[]>();
 
-    const {usertype} = useContext(AuthContext);
+    const {usertype, officeId} = useContext(AuthContext);
 
     function clearForm() {
         setUsername('');
@@ -27,7 +27,7 @@ const CreateUsersForm: React.FC = () => {
 
     function createUpdateUser() {
         if (userName && password && userType) {
-            AuthService.register(userName, password, userType, "")
+            AuthService.register(userName, password, userType, officeId)
                 .then(res => {
                     setSuccess(res.success);
                     setMsg(res.msg);

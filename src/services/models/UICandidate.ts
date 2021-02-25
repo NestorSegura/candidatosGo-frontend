@@ -8,4 +8,5 @@ export interface UICandidate {
     phone2?: string;
     email: string;
     dni?: string;
+    creationDate?: string;
 }

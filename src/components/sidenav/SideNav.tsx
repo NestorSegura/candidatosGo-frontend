@@ -14,6 +14,7 @@ const SideNav: React.FC = () => {
     const [showDailyInterview, setShowDailyInteview] = useState<boolean>(false);
     const [showPendingForCall, setShowPendingForCall] = useState<boolean>(false);
     const [userType, setUserType] = useState<string>();
+    const [openNav, setOpenNav] = useState(false);
 
     const renderContentForUserType = () => {
         switch (userType) {
@@ -57,45 +58,53 @@ const SideNav: React.FC = () => {
     })
 
     return (
-        <div className="col-md-3 col-lg-2 d-md-block bg-primary sidebar">
-            <ul className="nav flex-columnd">
-                {showCandidates &&
-                <li className="nav-item">
-                    <NavLink to="/candidatos" className="nav-link" activeClassName="active">
-                        Búsqueda de Candidatos
-                    </NavLink>
-                </li>
-                }
-                {showUsers &&
-                <li className="nav-item">
-                    <NavLink to="/usuarios" className="nav-link" activeClassName="active">
-                        Usuarios
-                    </NavLink>
-                </li>
-                }
-                {showConfiguration &&
-                <li className="nav-item">
-                    <NavLink to="/configuracion" className="nav-link" activeClassName="active">
-                        Configuración
-                    </NavLink>
-                </li>
-                }
-                {
-                    showDailyInterview && <li className="nav-item">
-                        <NavLink to="/configuracion" className="nav-link" activeClassName="active">
-                            Entrevistas del día
+        <>
+            <div className={`col-md-3 col-lg-2 d-md-block bg-primary sidebar ${openNav ? 'open' : ''}`}>
+                <div className="d-flex justify-content-end">
+                    <button className="navClose btn btn-light" onClick={() => setOpenNav(false)}>
+                        <i className="bi bi-x"></i>
+                    </button>
+                </div>
+                <ul className="nav flex-columnd">
+                    {showCandidates &&
+                    <li className="nav-item">
+                        <NavLink to="/candidatos" className="nav-link" activeClassName="active">
+                            Búsqueda de Candidatos
                         </NavLink>
                     </li>
-                }
-                {
-                    showPendingForCall && <li className="nav-item">
-                        <NavLink to="/configuracion" className="nav-link" activeClassName="active">
-                            Pendientes Por llamar
+                    }
+                    {showUsers &&
+                    <li className="nav-item">
+                        <NavLink to="/usuarios" className="nav-link" activeClassName="active">
+                            Usuarios
                         </NavLink>
                     </li>
-                }
-            </ul>
-        </div>
+                    }
+                    {showConfiguration &&
+                    <li className="nav-item">
+                        <NavLink to="/configuracion" className="nav-link" activeClassName="active">
+                            Configuración
+                        </NavLink>
+                    </li>
+                    }
+                    {
+                        showDailyInterview && <li className="nav-item">
+                            <NavLink to="/configuracion" className="nav-link" activeClassName="active">
+                                Entrevistas del día
+                            </NavLink>
+                        </li>
+                    }
+                    {
+                        showPendingForCall && <li className="nav-item">
+                            <NavLink to="/configuracion" className="nav-link" activeClassName="active">
+                                Pendientes Por llamar
+                            </NavLink>
+                        </li>
+                    }
+                </ul>
+            </div>
+            <button className="navOpen btn btn-primary" onClick={() => setOpenNav(true)}><i className="bi bi-list"></i></button>
+        </>
     )
 }
 

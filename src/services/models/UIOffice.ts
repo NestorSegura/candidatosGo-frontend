@@ -1,4 +1,4 @@
 export interface UIOffice {
-    office_id: string;
+    uuid: string;
     name: string;
 }

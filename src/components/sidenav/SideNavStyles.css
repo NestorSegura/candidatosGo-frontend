@@ -1,3 +1,4 @@
+
 .sidebar {
     min-height: 100%;
     padding-right: 0;
@@ -25,4 +26,35 @@
 
 .sidebar .nav-link:hover {
     color: #dddddd;
+}
+
+.navOpen, .navClose { display: none}
+
+@media screen and (max-width: 767px) {
+    .sidebar {
+        position: fixed;
+        z-index: 10;
+        transform: translateX(-100%);
+        transition: all .3s ease;
+        top: 0;
+    }
+
+    .sidebar.open {
+        transform: translateX(0%);
+    }
+
+    .navOpen, .navClose {
+        display: block;
+        width: auto;
+    }
+
+    .navOpen {
+        position: absolute;
+        right: 1rem;
+        top: 5rem;
+    }
+
+    .navClose {
+        margin: 1rem;
+    }
 }

@@ -1,11 +1,15 @@
 import * as React from "react";
-import {useEffect, useState} from "react";
+import {useContext, useEffect, useState} from "react";
 import CandidatesService from "../../services/candidates.service";
 import {deepEqual} from "../../utils/comparisonMethods";
 import {UICandidate} from "../../services/models/UICandidate";
 import ProcessInformationCreateEditForm from "../processinformation/ProcessInformationCreateEditForm";
 import PageWrapper from "../pagewrapper/PageWrapper";
 import CandidateEditForm from "./CandidateEditForm";
+import CandidateOfficeDetails from "./CandidateOfficeDetails";
+import {UIOffice} from "../../services/models/UIOffice";
+import OfficeService from "../../services/office.service";
+import {AuthContext} from "../auth/AuthContext";
 
 interface CandidateFileProps {
     id: string;
@@ -15,6 +19,7 @@ const CandidateFile: React.FC<CandidateFileProps> = (props: CandidateFileProps) 
 
     const [candidate, setCandidate] = useState<UICandidate | undefined>(undefined);
     const [edit, setEdit] = useState<boolean>(false);
+    const [office, setOffice] = useState<UIOffice>();
 
     useEffect(() => {
         const fetchData = async () => {
@@ -25,6 +30,21 @@ const CandidateFile: React.FC<CandidateFileProps> = (props: CandidateFileProps) 
         }
         fetchData();
     }, [candidate, edit, props.id])
+
+    useEffect(() => {
+        const fetchData = async () => {
+            if(candidate) {
+                const response = await OfficeService.getOfficeByUuid<UIOffice>(candidate.office_id)
+                if(response.parsedBody) {
+                    const {uuid, name} = response.parsedBody?.data;
+                    if(!deepEqual(office, {uuid: uuid, name})) {
+                        setOffice({uuid: uuid, name})
+                    }
+                }
+            }
+        }
+        fetchData();
+    })
 
     function editCandidateHandler(e: React.MouseEvent) {
         e.preventDefault();
@@ -68,6 +88,8 @@ const CandidateFile: React.FC<CandidateFileProps> = (props: CandidateFileProps) 
         ))
     }
 
+    const {officeId} = useContext(AuthContext);
+
     return (
         <PageWrapper>
             <div className="p-4 row">
@@ -77,18 +99,20 @@ const CandidateFile: React.FC<CandidateFileProps> = (props: CandidateFileProps) 
                         <CandidateEditForm candidate={candidate} editHandler={setEdit}/> :
                         <>
                             {renderPersonalContent()}
-                            <div className="col">
-                                <button type="button" className="btn btn-outline-primary"
-                                        onClick={editCandidateHandler}>
-                                    Editar información personal
-                                </button>
-                            </div>
+                            { office?.uuid === officeId &&
+                                <div className="col">
+                                    <button type="button" className="btn btn-outline-primary"
+                                            onClick={editCandidateHandler}>
+                                        Editar información personal
+                                    </button>
+                                </div>
+                            }
                         </>
                 }
-
             </div>
-            <div className="p-4 row">
-                {candidate?.id && <ProcessInformationCreateEditForm candidateId={parseInt(candidate.id)}/>}
+            <div className="p-4 d-flex flex-row-reverse align-items-start justify-content-start flex-wrap">
+                <div className="col-12 col-sm-4 mb-4"><CandidateOfficeDetails office={office as UIOffice} registrationDate={candidate?.creationDate as string} /></div>
+                {candidate?.id && <div className="col-12 col-sm-8"><ProcessInformationCreateEditForm buttonDisabled={office?.uuid !== officeId} candidateId={parseInt(candidate.id)}/></div>}
             </div>
         </PageWrapper>
 

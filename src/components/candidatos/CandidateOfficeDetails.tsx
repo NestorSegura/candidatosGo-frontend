@@ -1,5 +1,9 @@
 import * as React from "react";
 import {UIOffice} from "../../services/models/UIOffice";
+import moment from "moment";
+import {useEffect, useState} from "react";
+import OfficeService from "../../services/office.service";
+import {deepEqual} from "../../utils/comparisonMethods";
 
 interface CandidateOfficeDetailsProps {
     office: UIOffice;
@@ -8,19 +12,23 @@ interface CandidateOfficeDetailsProps {
 
 const CandidateOfficeDetails: React.FC<CandidateOfficeDetailsProps> = (props: CandidateOfficeDetailsProps) => {
 
-    return <div className="row">
-        <h3>Datos de registro</h3>
-        <div className="d-flex flex-column">
-            <div>
-                <h4>Oficina</h4>
-                <p>{props.office.name}</p>
-            </div>
-            <div>
-                <h4>Fecha</h4>
-                <p>{props.registrationDate}</p>
-            </div>
+    return (props.office || props.registrationDate ) ? <div className="row">
+        <h3 className="mb-3">Datos de registro</h3>
+        <div className="d-flex flex-row">
+            {
+                props.office && <div className="me-3">
+                    <h5>Oficina</h5>
+                    <p>{props.office.name}</p>
+                </div>
+            }
+            {
+                props.registrationDate && <div>
+                    <h5>Fecha</h5>
+                    <p>{moment(props.registrationDate).format('DD MMM YYYY')}</p>
+                </div>
+            }
         </div>
-    </div>
+    </div> : null
 }
 
 export default CandidateOfficeDetails;

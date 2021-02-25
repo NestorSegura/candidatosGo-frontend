@@ -1,5 +1,5 @@
 import * as React from "react";
-import {useEffect, useState} from "react";
+import {useContext, useEffect, useState} from "react";
 import ProcessInformationService from "../../services/processInformation.service";
 import {UIProcessInformation} from "../../services/models/UIProcessInformation";
 import {deepEqual} from "../../utils/comparisonMethods";
@@ -7,9 +7,11 @@ import DatePicker from "react-datepicker";
 import moment from 'moment';
 import "react-datepicker/dist/react-datepicker.css";
 import {checkNullString} from "../../utils/checkMethods";
+import {AuthContext} from "../auth/AuthContext";
 
 interface ProcessInformationCreateEditFormProps {
     candidateId: number;
+    buttonDisabled: boolean;
 }
 
 const ProcessInformationCreateEditForm: React.FC<ProcessInformationCreateEditFormProps> = (props: ProcessInformationCreateEditFormProps) => {
@@ -80,10 +82,10 @@ const ProcessInformationCreateEditForm: React.FC<ProcessInformationCreateEditFor
     }
 
     return (
-        <div className="row">
+        <div className="pe-5">
             <h3 className="mb-3">Información del proceso</h3>
             <form className="mb-4">
-                <div className="col-12 col-sm-6 col-md-4 mb-3">
+                <div className="col-12">
                     <label htmlFor="mail" className="form-label me-3">Fecha de entrevista: </label>
                     <DatePicker selected={interviewDate}
                                 className="form-control"
@@ -92,9 +94,9 @@ const ProcessInformationCreateEditForm: React.FC<ProcessInformationCreateEditFor
                                 onChange={date => setInteviewDate(date as Date)}/>
                 </div>
 
-                <hr className="mt-4 mb-4 col-12 col-sm-6 "/>
+                <hr className="mt-4 col-12"/>
 
-                <div className="col-12 col-sm-6  d-flex mb-3">
+                <div className="col-12  d-flex mb-3">
                     <p className="me-3">Preselecionado: </p>
                     <div className="form-check me-3">
                         <input className="form-check-input"
@@ -121,7 +123,7 @@ const ProcessInformationCreateEditForm: React.FC<ProcessInformationCreateEditFor
                         </label>
                     </div>
                 </div>
-                <div className="col-12 col-sm-6  mb-3">
+                <div className="col-12 mb-3">
                     <label htmlFor="preselectedComment" className="form-label">Comentario de
                         preselección</label>
                     <textarea className="form-control"
@@ -131,9 +133,9 @@ const ProcessInformationCreateEditForm: React.FC<ProcessInformationCreateEditFor
                               onChange={e => setPreselectedComments(e.target.value)}/>
                 </div>
 
-                <hr className="mt-4 mb-4 col-12 col-sm-6 "/>
+                <hr className="mt-4 mb-4 col-12 "/>
 
-                <div className="col-12 col-sm-6  mb-3">
+                <div className="col-12 mb-3">
                     <label htmlFor="mail" className="form-label me-3">Fecha de observación: </label>
                     <DatePicker selected={observationDay}
                                 className="form-control"
@@ -142,7 +144,7 @@ const ProcessInformationCreateEditForm: React.FC<ProcessInformationCreateEditFor
                                 onChange={date => setObservationDay(date as Date)}/>
                 </div>
 
-                <div className="col-12 col-sm-6  d-flex mb-3">
+                <div className="col-12 d-flex mb-3">
                     <p className="me-3">Asistió a la observación : </p>
                     <div className="form-check me-3">
                         <input className="form-check-input"
@@ -171,7 +173,7 @@ const ProcessInformationCreateEditForm: React.FC<ProcessInformationCreateEditFor
                 </div>
 
 
-                <div className="col-12 col-sm-6  mb-3">
+                <div className="col-12 mb-3">
                     <label htmlFor="assistedToObservationComment" className="form-label">Comentario día de
                         observación</label>
                     <textarea className="form-control"
@@ -181,9 +183,9 @@ const ProcessInformationCreateEditForm: React.FC<ProcessInformationCreateEditFor
                               onChange={e => setObservationDayComments(e.target.value)}/>
                 </div>
 
-                <hr className="mt-4 mb-4 col-12 col-sm-6 "/>
+                <hr className="mt-4 mb-4 col-12 "/>
 
-                <div className="col-12 col-sm-6  mb-3 d-flex align-items-center">
+                <div className="col-12   mb-3 d-flex align-items-center">
                     <label htmlFor="trainerText" className="form-label me-3">Entrenador: </label>
                     <input type="text"
                            className="form-control" id="trainerText"
@@ -192,7 +194,7 @@ const ProcessInformationCreateEditForm: React.FC<ProcessInformationCreateEditFor
                            placeholder="nombre del entrenador"/>
                 </div>
 
-                <div className="col-12 col-sm-6  d-flex mb-3">
+                <div className="col-12   d-flex mb-3">
                     <p className="me-3">Admitido: </p>
                     <div className="form-check me-3">
                         <input className="form-check-input"
@@ -220,7 +222,7 @@ const ProcessInformationCreateEditForm: React.FC<ProcessInformationCreateEditFor
                     </div>
                 </div>
 
-                <div className="col-12 col-sm-6  mb-3">
+                <div className="col-12   mb-3">
                     <label htmlFor="admisioncomments" className="form-label">Comentarios de admisión</label>
                     <textarea className="form-control"
                               id="admisioncomments"
@@ -229,9 +231,9 @@ const ProcessInformationCreateEditForm: React.FC<ProcessInformationCreateEditFor
                               onChange={e => setAdmissionComments(e.target.value)}/>
                 </div>
 
-                <hr className="mt-4 mb-4 col-12 col-sm-6 col-md-4"/>
+                <hr className="mt-4 mb-4 col-12  col-md-4"/>
 
-                <div className="col-12 col-sm-6  d-flex mb-3">
+                <div className="col-12   d-flex mb-3">
                     <div className="form-check">
                         <input className="form-check-input"
                                type="checkbox"
@@ -243,7 +245,7 @@ const ProcessInformationCreateEditForm: React.FC<ProcessInformationCreateEditFor
                 </div>
                 {
                     down ? (<>
-                            <div className="col-12 col-sm-6 col-md-4 mb-3">
+                            <div className="col-12  col-md-4 mb-3">
                                 <label htmlFor="mail" className="form-label me-3">Fecha de baja: </label>
                                 <DatePicker selected={downDate}
                                             className="form-control"
@@ -251,7 +253,7 @@ const ProcessInformationCreateEditForm: React.FC<ProcessInformationCreateEditFor
                                             placeholderText="no tiene fecha de baja"
                                             onChange={date => setDownDate(date as Date)}/>
                             </div>
-                            <div className="col-12 col-sm-6  mb-3">
+                            <div className="col-12   mb-3">
                                 <label htmlFor="downcomments" className="form-label">Comentarios de baja</label>
                                 <textarea className="form-control"
                                           id="downcomments"
@@ -266,7 +268,7 @@ const ProcessInformationCreateEditForm: React.FC<ProcessInformationCreateEditFor
             </form>
             <div className="col">
                 <button type="button" className="btn btn-outline-primary"
-                        onClick={saveChangesHandler}>
+                        onClick={saveChangesHandler} disabled={props.buttonDisabled}>
                     Guardar cambios
                 </button>
             </div>

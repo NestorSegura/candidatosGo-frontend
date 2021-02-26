@@ -5,6 +5,7 @@ import CandidateRow from "./CandidateListRow";
 
 interface CandidateListProps {
     candidateList: UICandidate[] | UICandidate;
+    title: string;
 }
 
 const CandidateList: React.FC<CandidateListProps> = (props: CandidateListProps) => {
@@ -23,7 +24,7 @@ const CandidateList: React.FC<CandidateListProps> = (props: CandidateListProps) 
 
     return renderConditional() ? (
         <div className="row">
-            <h2>Resultados Encontrados</h2>
+            <h2>{props.title}</h2>
             <div className="table-responsive">
                 <table className="table table-striped table-hover table-bordered candidatos">
                     <thead>

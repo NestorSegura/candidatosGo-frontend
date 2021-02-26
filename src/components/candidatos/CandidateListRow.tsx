@@ -33,7 +33,7 @@ const CandidateRow: React.FC<CandidateRowI> = (props: CandidateRowI) => {
 
     return <tr key={props.candidate.id} onClick={() => onRowClickHandler(props.candidate.id as string)}>
         <td>{props.candidate.surename}</td>
-        <td>{props.candidate.surename}</td>
+        <td>{props.candidate.lastname}</td>
         <td>{props.candidate.dni}</td>
         <td>{props.candidate.email}</td>
         <td>{props.candidate.phone1}</td>

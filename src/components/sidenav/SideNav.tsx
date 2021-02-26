@@ -20,28 +20,26 @@ const SideNav: React.FC = () => {
         switch (userType) {
             case 'SYS_ADMIN': {
                 setShowUsers(true);
-                setShowCandidates(false);
-                setShowConfiguration(false);
-                setShowDailyInteview(false);
-                setShowPendingForCall(false);
                 break;
             }
             case 'OFFICE': {
                 setShowUsers(true);
                 setShowCandidates(true);
-                setShowConfiguration(true);
+                //setShowConfiguration(true);
+                setShowPendingForCall(true);
                 break;
             }
             case 'ASISTENCE': {
                 setShowCandidates(true);
                 setShowUsers(true);
-                setShowConfiguration(false);
+                //setShowConfiguration(false);
+                setShowPendingForCall(true);
                 break;
             }
             default: {
                 setShowCandidates(false);
                 setShowUsers(false);
-                setShowConfiguration(false);
+                //setShowConfiguration(false);
             }
         }
     }
@@ -73,10 +71,17 @@ const SideNav: React.FC = () => {
                         </NavLink>
                     </li>
                     }
+                    {
+                        showPendingForCall && <li className="nav-item">
+                            <NavLink to="/candidatos-por-llamar" className="nav-link" activeClassName="active">
+                                Pendientes Por llamar
+                            </NavLink>
+                        </li>
+                    }
                     {showUsers &&
                     <li className="nav-item">
                         <NavLink to="/usuarios" className="nav-link" activeClassName="active">
-                            Usuarios
+                            Usuarios del sistema
                         </NavLink>
                     </li>
                     }
@@ -94,16 +99,9 @@ const SideNav: React.FC = () => {
                             </NavLink>
                         </li>
                     }
-                    {
-                        showPendingForCall && <li className="nav-item">
-                            <NavLink to="/configuracion" className="nav-link" activeClassName="active">
-                                Pendientes Por llamar
-                            </NavLink>
-                        </li>
-                    }
                 </ul>
             </div>
-            <button className="navOpen btn btn-primary" onClick={() => setOpenNav(true)}><i className="bi bi-list"></i></button>
+            <button className="navOpen btn btn-primary" onClick={() => setOpenNav(true)}><i className="bi bi-list"/></button>
         </>
     )
 }

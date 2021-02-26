@@ -2,7 +2,7 @@ import {httpFetch} from "./fetch";
 import {UIProcessInformation} from "./models/UIProcessInformation";
 
 const ProcessInformationService = {
-    basePath: process.env.BACKEND_URL || 'http://localhost:7000',
+    basePath: process.env.NODE_ENV === 'production' ? 'http://candidatosgo.es:7000' : 'http://localhost:7000',
     findProcessInformationByCandidateId: async <T>(candidateId: number) => {
         return await httpFetch.get<T>(
             `${ProcessInformationService.basePath}/processinformation/${candidateId}`,

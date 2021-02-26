@@ -1,5 +1,5 @@
 import * as React from "react";
-import {useContext, useEffect, useState} from "react";
+import {useEffect, useState} from "react";
 import ProcessInformationService from "../../services/processInformation.service";
 import {UIProcessInformation} from "../../services/models/UIProcessInformation";
 import {deepEqual} from "../../utils/comparisonMethods";
@@ -7,7 +7,6 @@ import DatePicker from "react-datepicker";
 import moment from 'moment';
 import "react-datepicker/dist/react-datepicker.css";
 import {checkNullString} from "../../utils/checkMethods";
-import {AuthContext} from "../auth/AuthContext";
 
 interface ProcessInformationCreateEditFormProps {
     candidateId: number;
@@ -29,6 +28,7 @@ const ProcessInformationCreateEditForm: React.FC<ProcessInformationCreateEditFor
     const [down, setDown] = useState<boolean>(false);
     const [downDate, setDownDate] = useState<Date>();
     const [downComments, setDownComments] = useState<string>();
+    const [called, setCalled] = useState<string>();
 
     useEffect(() => {
         const fetchData = async () => {
@@ -49,6 +49,8 @@ const ProcessInformationCreateEditForm: React.FC<ProcessInformationCreateEditFor
             setDown(!!processInformation?.down);
             if (checkNullString(processInformation?.downComments)) setDownComments(processInformation?.downComments);
             if (checkNullString(processInformation?.downDate)) setDownDate(moment.utc(processInformation?.downDate, ["DDD-MM-YYYY"]).toDate());
+            if (checkNullString(processInformation?.called)) setCalled(processInformation?.called);
+
         }
         fetchData();
     }, [processInformation, props.candidateId])
@@ -68,7 +70,8 @@ const ProcessInformationCreateEditForm: React.FC<ProcessInformationCreateEditFor
             down: down,
             downDate: downDate?.toDateString(),
             downComments: downComments,
-            candidateId: props.candidateId
+            candidateId: props.candidateId,
+            called: called
         }
         if (processInformation?.id) {
             newProcessInformation.id = processInformation.id;
@@ -85,6 +88,33 @@ const ProcessInformationCreateEditForm: React.FC<ProcessInformationCreateEditFor
         <div className="pe-5">
             <h3 className="mb-3">Información del proceso</h3>
             <form className="mb-4">
+                <div className="col-12  d-flex mb-3">
+                    <p className="me-3">Contactado: </p>
+                    <div className="form-check me-3">
+                        <input className="form-check-input"
+                               type="radio"
+                               name="called"
+                               id="called-yes"
+                               checked={called === 'si'}
+                               onChange={(e) => setCalled(e.target.value)}
+                               value="si"/>
+                        <label className="form-check-label" htmlFor="called-yes">
+                            Sí
+                        </label>
+                    </div>
+                    <div className="form-check">
+                        <input className="form-check-input"
+                               type="radio"
+                               name="called"
+                               id="called-no"
+                               checked={called === 'no'}
+                               onChange={(e) => setCalled(e.target.value)}
+                               value="no"/>
+                        <label className="form-check-label" htmlFor="called-no">
+                            No
+                        </label>
+                    </div>
+                </div>
                 <div className="col-12">
                     <label htmlFor="mail" className="form-label me-3">Fecha de entrevista: </label>
                     <DatePicker selected={interviewDate}
@@ -136,7 +166,7 @@ const ProcessInformationCreateEditForm: React.FC<ProcessInformationCreateEditFor
                 <hr className="mt-4 mb-4 col-12 "/>
 
                 <div className="col-12 mb-3">
-                    <label htmlFor="mail" className="form-label me-3">Fecha de observación: </label>
+                    <label htmlFor="mail" className="form-label me-3">Fecha de día de observación: </label>
                     <DatePicker selected={observationDay}
                                 className="form-control"
                                 dateFormat="dd/MM/yyyy"
@@ -145,7 +175,7 @@ const ProcessInformationCreateEditForm: React.FC<ProcessInformationCreateEditFor
                 </div>
 
                 <div className="col-12 d-flex mb-3">
-                    <p className="me-3">Asistió a la observación : </p>
+                    <p className="me-3">Asistió a al día de observación : </p>
                     <div className="form-check me-3">
                         <input className="form-check-input"
                                type="radio"

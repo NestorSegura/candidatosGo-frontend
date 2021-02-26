@@ -22,7 +22,7 @@ export interface LogoutResponse {
 }
 
 const AuthService = {
-    basePath: process.env.BACKEND_URL || 'http://localhost:7000',
+    basePath: process.env.NODE_ENV === 'production' ? 'http://candidatosgo.es:7000' : 'http://localhost:7000',
     login: async (username: string, password: string) : Promise<LoginResponse | ErrorMessageResponse> => {
         const response = await fetch(`${AuthService.basePath}/login`, {
             method: 'POST',
@@ -35,6 +35,7 @@ const AuthService = {
                 password
             })
         })
+
         return response.json();
     },
     register: async (username: string,

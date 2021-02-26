@@ -31,7 +31,7 @@ const CandidatosSearchForm: React.FC<CandidatosSearchFormProps> = (props: Candid
         setShowAllFields(false);
         CandidatesService.searchCandidate<UICandidate[]>(phone1, email)
             .then(result => {
-                if (!!result.parsedBody?.data) {
+                if (!!result.parsedBody?.data && result.parsedBody?.data.length > 0) {
                     props.setCandidates(result.parsedBody.data);
                 } else {
                     setResultMessage("No se encontraron candidatos con los datos proporcionados");

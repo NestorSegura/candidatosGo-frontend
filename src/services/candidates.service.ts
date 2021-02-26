@@ -2,7 +2,7 @@ import {httpFetch} from "./fetch";
 import {UICandidate} from "./models/UICandidate";
 
 const CandidatesService = {
-    basePath: process.env.BACKEND_URL || 'http://localhost:7000',
+    basePath: process.env.NODE_ENV === 'production' ? 'http://candidatosgo.es:7000' : 'http://localhost:7000',
     searchCandidate: async <T>(phone1: string, email: string) => {
         return await httpFetch.post<T>(
             `${CandidatesService.basePath}/candidates/find`,
@@ -26,6 +26,10 @@ const CandidatesService = {
         return await httpFetch.get<T>(
             `${CandidatesService.basePath}/candidates/${id}`
         )
+    },
+    getCandidatesToCallByOffice: async (officeId: string) => {
+        return await httpFetch.get<UICandidate[]>(
+            `${CandidatesService.basePath}/candidates/calllist/${officeId}`)
     }
 }
 

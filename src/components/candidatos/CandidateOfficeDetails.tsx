@@ -1,9 +1,6 @@
 import * as React from "react";
 import {UIOffice} from "../../services/models/UIOffice";
 import moment from "moment";
-import {useEffect, useState} from "react";
-import OfficeService from "../../services/office.service";
-import {deepEqual} from "../../utils/comparisonMethods";
 
 interface CandidateOfficeDetailsProps {
     office: UIOffice;

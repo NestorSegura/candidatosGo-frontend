@@ -12,7 +12,9 @@ const Dashboard = () => {
         <PageWrapper>
             <CandidatosSearchForm setCandidates={setCandidates}/>
             {
-                candidates ? <CandidateList candidateList={candidates}/> : null
+                candidates ? <CandidateList
+                    candidateList={candidates}
+                    title="Resultados Encontrados"/> : null
             }
         </PageWrapper>
     )

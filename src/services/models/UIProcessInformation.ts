@@ -15,4 +15,5 @@ export interface UIProcessInformation {
     downDate?: string;
     downComments?: string
     candidateId: number;
+    called?: string;
 }

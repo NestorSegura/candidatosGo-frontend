@@ -9,6 +9,7 @@ import Login from "./components/Login";
 import MainNav from "./components/MainNav";
 import UsuariosPage from "./pages/Usuarios";
 import ConfigurationPage from "./pages/ConfigurationPage";
+import CandidatesToCallPage from "./pages/CandidatesToCall";
 
 ReactDOM.render(
     <React.StrictMode>
@@ -16,6 +17,7 @@ ReactDOM.render(
             <AutProvider>
                 <MainNav/>
                 <Switch>
+                    <Route path="/candidatos-por-llamar" component={CandidatesToCallPage}/>
                     <Route path="/configuracion" component={ConfigurationPage}/>
                     <Route path="/usuarios" component={UsuariosPage} />
                     <Route path="/candidatos/:id" component={CandidatePage}/>

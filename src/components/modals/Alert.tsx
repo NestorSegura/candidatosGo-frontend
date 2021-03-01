@@ -14,7 +14,7 @@ const Alert: React.FC<CustomAlertI> = (props) => {
 
     return props.shouldAppear ? (
         <div className="alert-wrapper d-flex justify-content-center align-items-center p-5">
-            <div className="alert">
+            <div className="custom-alert">
                 <div className="alert-content p-3">
                     <p>{props.message}</p>
                 </div>

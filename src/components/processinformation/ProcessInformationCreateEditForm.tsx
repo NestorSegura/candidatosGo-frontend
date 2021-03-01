@@ -29,6 +29,8 @@ const ProcessInformationCreateEditForm: React.FC<ProcessInformationCreateEditFor
     const [downDate, setDownDate] = useState<Date>();
     const [downComments, setDownComments] = useState<string>();
     const [called, setCalled] = useState<string>();
+    const [success, setSuccess] = useState<boolean>(false);
+    const [error, setError] = useState<string>();
 
     useEffect(() => {
         const fetchData = async () => {
@@ -75,7 +77,17 @@ const ProcessInformationCreateEditForm: React.FC<ProcessInformationCreateEditFor
         }
         if (processInformation?.id) {
             newProcessInformation.id = processInformation.id;
-            await ProcessInformationService.updateProcessInformation(newProcessInformation);
+            ProcessInformationService.updateProcessInformation(newProcessInformation)
+                .then(response => {
+                    if(response.parsedBody?.success) {
+                        setSuccess(response.parsedBody.success);
+                        setTimeout(() => {
+                            setSuccess(false)
+                        }, 5000);
+                    }
+                }).catch( error => {
+                    setError(error)
+            });
         } else {
             const response = await ProcessInformationService.saveProcessInformation<UIProcessInformation>(newProcessInformation);
             if (response.parsedBody?.data) {
@@ -296,11 +308,21 @@ const ProcessInformationCreateEditForm: React.FC<ProcessInformationCreateEditFor
                 }
 
             </form>
-            <div className="col">
-                <button type="button" className="btn btn-outline-primary"
+            <div className="d-flex align-items-start justify-content-start">
+                <button type="button" className="btn btn-outline-primary mb-3 me-3"
                         onClick={saveChangesHandler} disabled={props.buttonDisabled}>
                     Guardar cambios
                 </button>
+                {
+                    success ? <div className="alert alert-success" role="alert">
+                        Cambios guardados exitosamente
+                    </div> : null
+                }
+                {
+                    error ? <div className="alert alert-danger" role="alert">
+                        {error}
+                    </div> : null
+                }
             </div>
         </div>
     )

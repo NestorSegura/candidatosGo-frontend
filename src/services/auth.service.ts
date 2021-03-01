@@ -41,7 +41,8 @@ const AuthService = {
     register: async (username: string,
                      password: string,
                      userType: string,
-                     office_id: string) : Promise<LoginResponse | ErrorMessageResponse> => {
+                     office_id: string,
+                     sponsor_uuid?: string) : Promise<LoginResponse | ErrorMessageResponse> => {
         const response = await fetch(`${AuthService.basePath}/register`, {
             method: 'POST',
             mode: 'cors',
@@ -52,7 +53,8 @@ const AuthService = {
                 username,
                 password,
                 userType,
-                office_id
+                office_id,
+                sponsor_uuid
             })
         })
         return response.json();

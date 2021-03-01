@@ -1,7 +1,8 @@
 interface HttpResponse<T> extends Response {
     parsedBody?: {
         success: boolean;
-        data: T
+        data: T,
+        msg?: string
     };
 }
 
@@ -42,6 +43,19 @@ export const httpFetch = {
     put: async <T>(url: string, body: unknown): Promise<HttpResponse<T>> => {
         const response: HttpResponse<T> = await fetch(url, {
             method: 'PUT',
+            mode: "cors",
+            headers: {
+                'Content-type': 'application/json',
+                'Authorization': `${_TOKEN}`
+            },
+            body: JSON.stringify(body)
+        })
+        response.parsedBody = await response.json();
+        return response;
+    },
+    delete: async <T>(url: string, body: unknown): Promise<HttpResponse<T>> => {
+        const response: HttpResponse<T> = await fetch(url, {
+            method: 'DELETE',
             mode: "cors",
             headers: {
                 'Content-type': 'application/json',

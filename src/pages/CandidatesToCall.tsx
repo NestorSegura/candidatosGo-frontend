@@ -25,7 +25,7 @@ const CandidatesToCallPage: React.FC = () => {
                     }
                 }).catch(error => console.error(error));
         }
-    }, [officeId])
+    }, [officeId, candidates])
 
     return (
         <PageWrapper>

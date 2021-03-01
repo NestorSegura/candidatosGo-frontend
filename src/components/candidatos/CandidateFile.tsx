@@ -34,7 +34,7 @@ const CandidateFile: React.FC<CandidateFileProps> = (props: CandidateFileProps) 
     useEffect(() => {
         const fetchData = async () => {
             if(candidate) {
-                const response = await OfficeService.getOfficeByUuid<UIOffice>(candidate.office_id)
+                const response = await OfficeService.getOfficeByUuid(candidate.office_id)
                 if(response.parsedBody) {
                     const {uuid, name} = response.parsedBody?.data;
                     if(!deepEqual(office, {uuid: uuid, name})) {

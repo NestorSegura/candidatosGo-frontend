@@ -20,7 +20,7 @@ const CandidateRow: React.FC<CandidateRowI> = (props: CandidateRowI) => {
 
     useEffect(() => {
         const fetchData = async () => {
-            const response = await OfficeService.getOfficeByUuid<UIOffice>(props.candidate.office_id)
+            const response = await OfficeService.getOfficeByUuid(props.candidate.office_id)
             if(response.parsedBody) {
                 const {uuid, name} = response.parsedBody?.data;
                 if(!deepEqual(office, {uuid: uuid, name})) {

@@ -2,6 +2,11 @@ import * as React from "react";
 import {ChangeEvent, useContext, useEffect, useState} from "react";
 import AuthService from "../../services/auth.service";
 import {AuthContext} from "../auth/AuthContext";
+import {UIOffice} from "../../services/models/UIOffice";
+import OfficeService from "../../services/office.service";
+import {deepEqual} from "../../utils/comparisonMethods";
+import {UIUser} from "../../services/models/UIUser";
+import UserService from "../../services/user.service";
 
 interface Fields {
     value: string;
@@ -9,13 +14,22 @@ interface Fields {
     allow: string[];
 }
 
-const CreateUsersForm: React.FC = () => {
+interface CreateUsersFormInit {
+    userToEdit?: UIUser,
+    editionMode: boolean;
+}
+
+const sysadmin = 'SYS_ADMIN';
+
+const CreateUsersForm: React.FC<CreateUsersFormInit> = (props) => {
     const [userName, setUsername] = useState<string>();
     const [password, setPassword] = useState<string>();
     const [userType, setUserType] = useState<string>();
     const [success, setSuccess] = useState<boolean>(false);
     const [msg, setMsg] = useState<string>();
     const [allowdFileds, setAllowedFields] = useState<Fields[]>();
+    const [sponsors, setSponsors] = useState<UIOffice[]>([]);
+    const [sponsor, setSponsor] = useState<string>();
 
     const {usertype, officeId} = useContext(AuthContext);
 
@@ -26,41 +40,72 @@ const CreateUsersForm: React.FC = () => {
     }
 
     function createUpdateUser() {
-        if (userName && password && userType) {
-            AuthService.register(userName, password, userType, officeId)
-                .then(res => {
-                    setSuccess(res.success);
-                    setMsg(res.msg);
+        if (!props.editionMode) {
+            if ((userName && password && userType)) {
+                AuthService.register(userName, password, userType, officeId, sponsor)
+                    .then(res => {
+                        setSuccess(res.success);
+                        setMsg(res.msg);
+                        clearForm();
+                        setTimeout(() => {
+                            setSuccess(false)
+                            setMsg(undefined);
+                        }, 5000);
+                    })
+                    .catch(error => console.error(error))
+            }
+        } else {
+            const updatedUser: UIUser = {
+                id: props.userToEdit?.id as number,
+                name: userName as string,
+                user_type: userType as string,
+                sponsor_uuid: sponsor,
+                office_id: officeId as string,
+            }
+            UserService.updateUser(updatedUser, password)
+                .then(response => {
+                    setMsg(response.parsedBody?.msg);
+                    setSuccess(!!response.parsedBody?.success)
                     clearForm();
                     setTimeout(() => {
                         setSuccess(false)
                         setMsg(undefined);
                     }, 5000);
                 })
-                .catch(error => console.error(error))
+                .catch(error => {
+                    setMsg(`Could not update user, error: ${error}`)
+                    setTimeout(() => {
+                        setMsg(undefined);
+                    }, 5000);
+                })
         }
+
     }
 
     function onUserTypeHandler(e: ChangeEvent<HTMLSelectElement>) {
         setUserType(e.target.value);
     }
 
+    function onSponsorChangeHandler(e: ChangeEvent<HTMLSelectElement>) {
+        setSponsor(e.target.value);
+    }
+
     useEffect(() => {
         const userTypesFields: Fields[] = [
             {
-                value: "SYS_ADMIN",
+                value: sysadmin,
                 label: "Administrador de sistema",
-                allow: ['SYS_ADMIN']
+                allow: [sysadmin]
             },
             {
                 value: "ASISTENCE",
                 label: "Secretario(a)",
-                allow: ['SYS_ADMIN', 'OFFICE']
+                allow: [sysadmin, 'OFFICE']
             },
             {
                 value: "OFFICE",
                 label: "Gerente / Oficina",
-                allow: ['SYS_ADMIN', 'OFFICE']
+                allow: [sysadmin, 'OFFICE']
             }
         ]
         const allowedFields: Fields[] = userTypesFields.filter(field => {
@@ -70,9 +115,37 @@ const CreateUsersForm: React.FC = () => {
 
     }, [usertype])
 
+    useEffect(() => {
+        const fetchData = async () => {
+            let allOffices = await OfficeService.getAllOffices();
+            if (usertype === sysadmin && allOffices.parsedBody?.data && !deepEqual(sponsors, allOffices.parsedBody?.data)) {
+                setSponsors(allOffices.parsedBody.data)
+            }
+        };
+
+        fetchData();
+    }, [usertype, sponsors])
+
+    function userIsAdmin() {
+        return usertype === sysadmin;
+    }
+
+    useEffect(() => {
+        if (props.userToEdit && userName !== props.userToEdit.name) {
+            setUsername(props.userToEdit.name)
+            setUserType(props.userToEdit.user_type)
+            setSponsor(props.userToEdit.sponsor_uuid)
+        }
+    }, [props.userToEdit, userName])
+
     return (
         <div>
-            <h1 className="mb-4">Crear Usuarios</h1>
+
+            {
+                props.editionMode ? <h1 className="mb-4">Modificar Usuarios</h1> :
+                    <h1 className="mb-4">Crear Usuarios</h1>
+            }
+
             <form className="row g-3 mb-3">
                 <div className="col-12 col-sm-6  mb-3">
                     <label htmlFor="username" className="form-label me-3">Nombre de usuario: </label>
@@ -93,7 +166,7 @@ const CreateUsersForm: React.FC = () => {
                 {allowdFileds ? <div className="col-12 col-sm-6">
                     <label htmlFor="usertype" className="form-label me-3">Tipo de usuario </label>
                     <select className="form-select" aria-label="Default select example" id="usertype"
-                            onChange={onUserTypeHandler} defaultValue='NO_VALID'>
+                            onChange={onUserTypeHandler} defaultValue='NO_VALID' value={userType}>
                         <option value="NO_VALID" disabled>Elegir tipo de usuario</option>
                         {
                             allowdFileds.map((field, index) =>
@@ -101,11 +174,33 @@ const CreateUsersForm: React.FC = () => {
                         }
                     </select>
                 </div> : null}
+
+                {
+                    sponsors.length > 0 && userIsAdmin() ? <div className="col-12 col-sm-6">
+                        <label htmlFor="usertype" className="form-label me-3">Patrocinante </label>
+                        <select className="form-select" aria-label="Default select example" id="usertype"
+                                onChange={onSponsorChangeHandler} defaultValue='NO_VALID' value={sponsor}>
+                            <option value="NO_VALID" disabled>Elegir patrocinante</option>
+                            {
+                                sponsors.map((sponsorOffice, index) =>
+                                    <option key={index} value={sponsorOffice.uuid}>{sponsorOffice.name}</option>)
+                            }
+                        </select>
+                    </div> : null
+                }
                 <div className="col-12">
-                    <button type="button" className="btn btn-outline-primary"
-                            onClick={createUpdateUser}>
-                        Crear usuario
-                    </button>
+                    {
+                        props.editionMode ?
+                            (<button type="button" className="btn btn-outline-primary"
+                                     onClick={createUpdateUser}>
+                                Guardar cambios
+                            </button>) :
+                            (<button type="button" className="btn btn-outline-primary"
+                                     onClick={createUpdateUser}>
+                                Crear usuario
+                            </button>)
+                    }
+
                 </div>
             </form>
             {

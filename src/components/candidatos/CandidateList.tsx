@@ -12,7 +12,7 @@ const CandidateList: React.FC<CandidateListProps> = (props: CandidateListProps) 
 
     const renderRows = () => {
         const items: UICandidate[] = Array.isArray(props.candidateList) ? props.candidateList : Array.of(props.candidateList);
-        return items.map(candidate => <CandidateRow candidate={candidate} />)
+        return items.map(candidate => <CandidateRow candidate={candidate}/>)
     }
 
     const renderConditional = () => {
@@ -24,7 +24,7 @@ const CandidateList: React.FC<CandidateListProps> = (props: CandidateListProps) 
 
     return renderConditional() ? (
         <div className="row">
-            <h2>{props.title}</h2>
+            <h1 className="mb-4">{props.title}</h1>
             <div className="table-responsive">
                 <table className="table table-striped table-hover table-bordered candidatos">
                     <thead>
@@ -42,6 +42,7 @@ const CandidateList: React.FC<CandidateListProps> = (props: CandidateListProps) 
                     {renderRows()}
                     </tbody>
                 </table>
+
             </div>
         </div>
     ) : null;

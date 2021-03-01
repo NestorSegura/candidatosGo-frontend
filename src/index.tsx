@@ -10,6 +10,7 @@ import MainNav from "./components/MainNav";
 import UsuariosPage from "./pages/Usuarios";
 import ConfigurationPage from "./pages/ConfigurationPage";
 import CandidatesToCallPage from "./pages/CandidatesToCall";
+import Diary from "./pages/Diary";
 
 ReactDOM.render(
     <React.StrictMode>
@@ -17,6 +18,7 @@ ReactDOM.render(
             <AutProvider>
                 <MainNav/>
                 <Switch>
+                    <Route path="/agenda" component={Diary} />
                     <Route path="/candidatos-por-llamar" component={CandidatesToCallPage}/>
                     <Route path="/configuracion" component={ConfigurationPage}/>
                     <Route path="/usuarios" component={UsuariosPage} />

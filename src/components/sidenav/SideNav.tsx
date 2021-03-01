@@ -26,6 +26,7 @@ const SideNav: React.FC = () => {
                 setShowUsers(true);
                 setShowCandidates(true);
                 //setShowConfiguration(true);
+                setShowDailyInteview(true);
                 setShowPendingForCall(true);
                 break;
             }
@@ -33,6 +34,7 @@ const SideNav: React.FC = () => {
                 setShowCandidates(true);
                 setShowUsers(true);
                 //setShowConfiguration(false);
+                setShowDailyInteview(true);
                 setShowPendingForCall(true);
                 break;
             }
@@ -78,30 +80,33 @@ const SideNav: React.FC = () => {
                             </NavLink>
                         </li>
                     }
-                    {showUsers &&
-                    <li className="nav-item">
-                        <NavLink to="/usuarios" className="nav-link" activeClassName="active">
-                            Usuarios del sistema
-                        </NavLink>
-                    </li>
-                    }
-                    {showConfiguration &&
-                    <li className="nav-item">
-                        <NavLink to="/configuracion" className="nav-link" activeClassName="active">
-                            Configuración
-                        </NavLink>
-                    </li>
-                    }
                     {
                         showDailyInterview && <li className="nav-item">
+                            <NavLink to="/agenda" className="nav-link" activeClassName="active">
+                                Agenda diaria
+                            </NavLink>
+                        </li>
+                    }
+                    {
+                        showUsers &&
+                        <li className="nav-item">
+                            <NavLink to="/usuarios" className="nav-link" activeClassName="active">
+                                Usuarios del sistema
+                            </NavLink>
+                        </li>
+                    }
+                    {
+                        showConfiguration &&
+                        <li className="nav-item">
                             <NavLink to="/configuracion" className="nav-link" activeClassName="active">
-                                Entrevistas del día
+                                Configuración
                             </NavLink>
                         </li>
                     }
                 </ul>
             </div>
-            <button className="navOpen btn btn-primary" onClick={() => setOpenNav(true)}><i className="bi bi-list"/></button>
+            <button className="navOpen btn btn-primary" onClick={() => setOpenNav(true)}><i className="bi bi-list"/>
+            </button>
         </>
     )
 }

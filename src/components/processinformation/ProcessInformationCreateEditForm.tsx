@@ -16,7 +16,7 @@ interface ProcessInformationCreateEditFormProps {
 const ProcessInformationCreateEditForm: React.FC<ProcessInformationCreateEditFormProps> = (props: ProcessInformationCreateEditFormProps) => {
 
     const [processInformation, setProcessInformation] = useState<UIProcessInformation>();
-    const [interviewDate, setInteviewDate] = useState<Date>();
+    const [interviewDate, setInterviewDate] = useState<Date>();
     const [preselected, setPreselected] = useState<string>();
     const [preselectedComments, setPreselectedComments] = useState<string>();
     const [asistedToObservation, setAsistedToObservation] = useState<string>();
@@ -40,17 +40,17 @@ const ProcessInformationCreateEditForm: React.FC<ProcessInformationCreateEditFor
                 setProcessInformation(response.parsedBody.data)
             }
             if (checkNullString(processInformation?.preSelected)) setPreselected(processInformation?.preSelected);
-            if (checkNullString(processInformation?.interviewDate)) setInteviewDate(moment.utc(processInformation?.interviewDate, ["DDD-MM-YYYY"]).toDate());
+            if (checkNullString(processInformation?.interviewDate)) setInterviewDate(new Date(processInformation?.interviewDate as string));
             if (checkNullString(processInformation?.assistedToObservation)) setAsistedToObservation(processInformation?.assistedToObservation);
             if (checkNullString(processInformation?.preselectedComments)) setPreselectedComments(processInformation?.preselectedComments as string)
-            if (checkNullString(processInformation?.observationDate)) setObservationDay(moment.utc(processInformation?.observationDate, ["DDD-MM-YYYY"]).toDate());
+            if (checkNullString(processInformation?.observationDate)) setObservationDay(new Date(processInformation?.observationDate as string));
             if (checkNullString(processInformation?.observationComments)) setObservationDayComments(processInformation?.observationComments);
             if (checkNullString(processInformation?.trainer)) setTrainer(processInformation?.trainer);
             if (checkNullString(processInformation?.admited)) setAdmited(processInformation?.admited);
             if (checkNullString(processInformation?.admitionComments)) setAdmissionComments(processInformation?.admitionComments);
             setDown(!!processInformation?.down);
             if (checkNullString(processInformation?.downComments)) setDownComments(processInformation?.downComments);
-            if (checkNullString(processInformation?.downDate)) setDownDate(moment.utc(processInformation?.downDate, ["DDD-MM-YYYY"]).toDate());
+            if (checkNullString(processInformation?.downDate)) setDownDate(new Date(processInformation?.downDate as string));
             if (checkNullString(processInformation?.called)) setCalled(processInformation?.called);
 
         }
@@ -60,17 +60,17 @@ const ProcessInformationCreateEditForm: React.FC<ProcessInformationCreateEditFor
     async function saveChangesHandler() {
         const newProcessInformation: UIProcessInformation = {
             registryTime: processInformation?.registryTime || moment().toDate().toLocaleDateString(),
-            interviewDate: interviewDate?.toDateString(),
+            interviewDate: interviewDate?.toISOString(),
             preSelected: preselected,
             preselectedComments: preselectedComments,
             assistedToObservation: asistedToObservation,
-            observationDate: observationDay?.toDateString(),
+            observationDate: observationDay?.toISOString(),
             observationComments: observationDayComments,
             trainer: trainer,
             admited: admited,
             admitionComments: admissionComments,
             down: down,
-            downDate: downDate?.toDateString(),
+            downDate: downDate?.toISOString(),
             downComments: downComments,
             candidateId: props.candidateId,
             called: called
@@ -79,14 +79,14 @@ const ProcessInformationCreateEditForm: React.FC<ProcessInformationCreateEditFor
             newProcessInformation.id = processInformation.id;
             ProcessInformationService.updateProcessInformation(newProcessInformation)
                 .then(response => {
-                    if(response.parsedBody?.success) {
+                    if (response.parsedBody?.success) {
                         setSuccess(response.parsedBody.success);
                         setTimeout(() => {
                             setSuccess(false)
                         }, 5000);
                     }
-                }).catch( error => {
-                    setError(error)
+                }).catch(error => {
+                setError(error)
             });
         } else {
             const response = await ProcessInformationService.saveProcessInformation<UIProcessInformation>(newProcessInformation);
@@ -131,9 +131,11 @@ const ProcessInformationCreateEditForm: React.FC<ProcessInformationCreateEditFor
                     <label htmlFor="mail" className="form-label me-3">Fecha de entrevista: </label>
                     <DatePicker selected={interviewDate}
                                 className="form-control"
-                                dateFormat="dd/MM/yyyy"
+                                showTimeInput
+                                timeInputLabel="Hora:"
+                                dateFormat="dd/MM/yyyy HH:mm"
                                 placeholderText="sin fecha aún"
-                                onChange={date => setInteviewDate(date as Date)}/>
+                                onChange={date => setInterviewDate(date as Date)}/>
                 </div>
 
                 <hr className="mt-4 col-12"/>
@@ -181,9 +183,13 @@ const ProcessInformationCreateEditForm: React.FC<ProcessInformationCreateEditFor
                     <label htmlFor="mail" className="form-label me-3">Fecha de día de observación: </label>
                     <DatePicker selected={observationDay}
                                 className="form-control"
-                                dateFormat="dd/MM/yyyy"
+                                showTimeInput
+                                timeInputLabel="Hora:"
+                                dateFormat="dd/MM/yyyy HH:mm"
                                 placeholderText="sin fecha aún"
-                                onChange={date => setObservationDay(date as Date)}/>
+                                onChange={date => {
+                                    setObservationDay(date as Date);
+                                }}/>
                 </div>
 
                 <div className="col-12 d-flex mb-3">
@@ -290,8 +296,9 @@ const ProcessInformationCreateEditForm: React.FC<ProcessInformationCreateEditFor
                             <div className="col-12  col-md-4 mb-3">
                                 <label htmlFor="mail" className="form-label me-3">Fecha de baja: </label>
                                 <DatePicker selected={downDate}
-                                            className="form-control"
-                                            dateFormat="dd/MM/yyyy"
+                                            showTimeInput
+                                            timeInputLabel="Hora:"
+                                            dateFormat="dd/MM/yyyy HH:mm"
                                             placeholderText="no tiene fecha de baja"
                                             onChange={date => setDownDate(date as Date)}/>
                             </div>

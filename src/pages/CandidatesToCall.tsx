@@ -30,7 +30,14 @@ const CandidatesToCallPage: React.FC = () => {
     return (
         <PageWrapper>
             <div id="candidates-to-call-page" className="flex-row">
-                <CandidateList candidateList={candidates} title="Candidatos Pendientes por llamar"/>
+                {
+                    candidates.length > 0 ?
+                        <CandidateList candidateList={candidates} title="Candidatos Pendientes por llamar"/> :
+                        <>
+                            <h1 className="mb-4">Candidatos Pendientes por llamar</h1>
+                            <p>No hay candidatos pendiente por llamar</p>
+                        </>
+                }
             </div>
         </PageWrapper>
     )

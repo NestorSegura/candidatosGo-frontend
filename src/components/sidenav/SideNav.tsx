@@ -33,7 +33,7 @@ const SideNav: React.FC = () => {
             case 'ASISTENCE': {
                 setShowCandidates(true);
                 setShowUsers(true);
-                //setShowConfiguration(false);
+                setShowConfiguration(false);
                 setShowDailyInteview(true);
                 setShowPendingForCall(true);
                 break;
@@ -41,7 +41,9 @@ const SideNav: React.FC = () => {
             default: {
                 setShowCandidates(false);
                 setShowUsers(false);
-                //setShowConfiguration(false);
+                setShowConfiguration(false);
+                setShowDailyInteview(false);
+                setShowPendingForCall(false);
             }
         }
     }

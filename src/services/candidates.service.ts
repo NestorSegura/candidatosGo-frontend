@@ -1,5 +1,5 @@
 import {httpFetch} from "./fetch";
-import {UICandidate} from "./models/UICandidate";
+import {UICandidate, UICandidateWithProcessInformation} from "./models/UICandidate";
 
 const CandidatesService = {
     basePath: process.env.NODE_ENV === 'production' ? 'http://candidatosgo.es:7000' : 'http://localhost:7000',
@@ -30,7 +30,17 @@ const CandidatesService = {
     getCandidatesToCallByOffice: async (officeId: string) => {
         return await httpFetch.get<UICandidate[]>(
             `${CandidatesService.basePath}/candidates/calllist/${officeId}`)
-    }
+    },
+    getCandidatesForInterviews: async (officeId: string, date: string) => {
+        return await httpFetch.get<UICandidateWithProcessInformation[]>(
+            `${CandidatesService.basePath}/candidates/interview-list/${officeId}/${date}`
+        )
+    },
+    getCandidatesForObservations: async (officeId: string, date: string) => {
+        return await httpFetch.get<UICandidateWithProcessInformation[]>(
+            `${CandidatesService.basePath}/candidates/observation-list/${officeId}/${date}`
+        )
+    },
 }
 
 export default CandidatesService;

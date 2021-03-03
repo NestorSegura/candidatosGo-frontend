@@ -177,10 +177,10 @@ const CreateUsersForm: React.FC<CreateUsersFormInit> = (props) => {
 
                 {
                     sponsors.length > 0 && userIsAdmin() ? <div className="col-12 col-sm-6">
-                        <label htmlFor="usertype" className="form-label me-3">Patrocinante </label>
+                        <label htmlFor="usertype" className="form-label me-3">Promotor </label>
                         <select className="form-select" aria-label="Default select example" id="usertype"
                                 onChange={onSponsorChangeHandler} defaultValue='NO_VALID' value={sponsor}>
-                            <option value="NO_VALID" disabled>Elegir patrocinante</option>
+                            <option value="NO_VALID" disabled>Elegir promotor</option>
                             {
                                 sponsors.map((sponsorOffice, index) =>
                                     <option key={index} value={sponsorOffice.uuid}>{sponsorOffice.name}</option>)

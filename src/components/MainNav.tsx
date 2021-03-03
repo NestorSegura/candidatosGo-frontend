@@ -1,16 +1,21 @@
 import * as React from "react";
-import {useContext, useEffect} from "react";
+import {useContext, useEffect, useState} from "react";
 import {AuthContext} from "./auth/AuthContext";
 import {Link, useHistory, Redirect} from "react-router-dom";
+import OfficeService from "../services/office.service";
 
 const MainNav: React.FC = () => {
-    const {isLoggedIn, logout, usertype} = useContext(AuthContext);
+    const {isLoggedIn, logout, usertype, officeId} = useContext(AuthContext);
     const history = useHistory();
+    const [officeName, setOfficeName] = useState<string>();
 
     const logOutHandler = () => {
         logout();
+        setOfficeName(undefined);
         return <Redirect to='/' />;
     }
+
+
 
     let userRootRights = new Map<string, string[]>();
     userRootRights.set('SYS_ADMIN', ['usuarios']);
@@ -28,11 +33,17 @@ const MainNav: React.FC = () => {
                     const redirectPath = alloedPaths ? alloedPaths[0] : '/';
                     history.push(redirectPath);
                 }
+
+                if (history.location.pathname === '/') {
+                    if(usertype === 'SYS_ADMIN') {
+                        history.push('/usuarios')
+                    } else {
+                        history.push('/candidatos')
+                    }
+                }
             }
 
-            if (history.location.pathname === '/') {
-                history.push('/candidatos')
-            }
+
         } else {
             history.push('/')
         }
@@ -42,10 +53,18 @@ const MainNav: React.FC = () => {
         redirectHandler();
     })
 
+    useEffect(() => {
+        if(officeId)
+        OfficeService.getOfficeByUuid(officeId)
+            .then(res => {
+                setOfficeName(res.parsedBody?.data.name)
+            })
+    }, [officeId])
+
     return (
         <nav className="navbar navbar-expand-lg navbar-light bg-light">
             <div className="container-fluid">
-                <Link className="navbar-brand" to="/">CANDIDATOSGO</Link>
+                <h3>CANDIDATOSGO {officeName ? <small> ( {officeName} )</small> : null}</h3>
                 {
                     isLoggedIn ? (
                         <div className="d-flex">

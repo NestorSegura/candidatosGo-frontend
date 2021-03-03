@@ -34,7 +34,7 @@ const UsersTable: React.FC<UserListProps> = (props: UserListProps) => {
                 <tr>
                     <th>Nombre de usuario</th>
                     <th>Tipo de usuario</th>
-                    <th>Patrocinador</th>
+                    <th>Promotor</th>
                     <th>Editar usuario</th>
                 </tr>
                 </thead>

@@ -42,7 +42,7 @@ const CreateUsersForm: React.FC<CreateUsersFormInit> = (props) => {
     function createUpdateUser() {
         if (!props.editionMode) {
             if ((userName && password && userType)) {
-                AuthService.register(userName, password, userType, officeId, sponsor)
+                AuthService.register(userName, password, userType, officeId as string, sponsor)
                     .then(res => {
                         setSuccess(res.success);
                         setMsg(res.msg);
@@ -142,7 +142,7 @@ const CreateUsersForm: React.FC<CreateUsersFormInit> = (props) => {
         <div>
 
             {
-                props.editionMode ? <h1 className="mb-4">Modificar Usuarios</h1> :
+                props.editionMode ? <h1 className="mb-4">Modificar Usuario</h1> :
                     <h1 className="mb-4">Crear Usuarios</h1>
             }
 

@@ -2,7 +2,7 @@ import * as React from 'react';
 import {useContext, useState} from 'react';
 import AuthService, {ErrorMessageResponse, LoginResponse} from "../services/auth.service";
 import {AuthContext, LocalStorageProps} from "./auth/AuthContext";
-import { Redirect } from 'react-router-dom';
+import {Redirect, useHistory} from 'react-router-dom';
 
 const Login: React.FC = () => {
     const [username, setUsername] = useState<string>('');
@@ -13,7 +13,7 @@ const Login: React.FC = () => {
 
     const handleLogin = async () => {
         AuthService.login(username, password)
-            .then(response => {
+            .then(async (response) => {
                 if (response.success) {
                     response = response as LoginResponse;
                     const localstorage: LocalStorageProps = {
@@ -22,11 +22,10 @@ const Login: React.FC = () => {
                         userType: response.user.user_type,
                         office_id: response.user.office_id
                     }
-                    login(localstorage);
-
-                    setError('');
-                    return <Redirect to="/" />
-
+                    await login(localstorage, () => {
+                        setError('');
+                        return <Redirect to="/" />
+                    });
                 } else {
                     response = response as ErrorMessageResponse
                     setError(response.msg)

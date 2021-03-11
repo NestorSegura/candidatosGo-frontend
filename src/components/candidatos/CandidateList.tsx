@@ -26,16 +26,17 @@ const CandidateList: React.FC<CandidateListProps> = (props: CandidateListProps) 
         <div className="row">
             <h1 className="mb-4">{props.title}</h1>
             <div className="table-responsive">
-                <table className="table table-striped table-hover table-bordered candidatos">
-                    <thead>
+                <table className="table candidatos align-middle">
+                    <thead className="table-light">
                     <tr>
-                        <td>Nombre</td>
-                        <td>Apellido</td>
-                        <td>DNI</td>
-                        <td>Correo Electrónico</td>
-                        <td>Teléfono 1</td>
-                        <td>Teléfono 2</td>
-                        <td>Oficina</td>
+                        <th>Nombre</th>
+                        <th>Apellido</th>
+                        <th>DNI</th>
+                        <th>Correo Electrónico</th>
+                        <th>Teléfono 1</th>
+                        <th>Teléfono 2</th>
+                        <th>Oficina</th>
+                        <th>Acción</th>
                     </tr>
                     </thead>
                     <tbody>

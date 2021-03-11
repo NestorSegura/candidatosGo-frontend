@@ -12,13 +12,14 @@ const DiaryCandidatesTable: React.FC<DiaryCandidatesTableI> = (props: DiaryCandi
     return (
         <div className="table-responsive">
             <h1>{props.title}</h1>
-            <table className=" table table-bordered">
-                <thead>
+            <table className=" table align-middle">
+                <thead className="table-light">
                 <tr>
                     <th>Nombre</th>
                     <th>Apellido</th>
                     <th>Fecha</th>
                     <th>Hora</th>
+                    <th>Acción</th>
                 </tr>
                 </thead>
                 <tbody>

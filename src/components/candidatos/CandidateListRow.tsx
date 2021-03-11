@@ -1,7 +1,7 @@
 import * as React from "react";
-import {UICandidate} from "../../services/models/UICandidate";
-import {useHistory} from "react-router-dom";
 import {useEffect, useState} from "react";
+import {UICandidate} from "../../services/models/UICandidate";
+import {Link, useHistory} from "react-router-dom";
 import OfficeService from "../../services/office.service";
 import {UIOffice} from "../../services/models/UIOffice";
 import {deepEqual} from "../../utils/comparisonMethods";
@@ -11,22 +11,18 @@ interface CandidateRowI {
 }
 
 const CandidateRow: React.FC<CandidateRowI> = (props: CandidateRowI) => {
-    const history = useHistory();
-    const onRowClickHandler = (id: string) => {
-        return history.push(`/candidatos/${id}`)
-    }
 
     const [office, setOffice] = useState<UIOffice>();
 
     useEffect(() => {
         const fetchData = async () => {
             const response = await OfficeService.getOfficeByUuid(props.candidate.office_id)
-            if(response.parsedBody) {
+            if (response.parsedBody) {
                 const data = response.parsedBody?.data;
                 const uuid = data ? data.uuid : '';
                 const name = data ? data.name : '';
 
-                if(!deepEqual(office, {uuid, name})) {
+                if (!deepEqual(office, {uuid, name})) {
                     setOffice({uuid: uuid, name})
                 }
             }
@@ -34,7 +30,7 @@ const CandidateRow: React.FC<CandidateRowI> = (props: CandidateRowI) => {
         fetchData();
     })
 
-    return <tr key={props.candidate.id} onClick={() => onRowClickHandler(props.candidate.id as string)}>
+    return <tr key={props.candidate.id}>
         <td>{props.candidate.surename}</td>
         <td>{props.candidate.lastname}</td>
         <td>{props.candidate.dni}</td>
@@ -42,6 +38,9 @@ const CandidateRow: React.FC<CandidateRowI> = (props: CandidateRowI) => {
         <td>{props.candidate.phone1}</td>
         <td>{props.candidate.phone2}</td>
         <td>{office?.name}</td>
+        <td>
+            <Link className="btn btn-outline-primary" to={`/candidatos/${props.candidate.id}`}>Detalles</Link>
+        </td>
     </tr>
 }
 

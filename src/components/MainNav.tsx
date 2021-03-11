@@ -1,20 +1,16 @@
 import * as React from "react";
-import {useContext, useEffect, useState} from "react";
+import {useContext, useEffect} from "react";
 import {AuthContext} from "./auth/AuthContext";
-import {Link, useHistory, Redirect} from "react-router-dom";
-import OfficeService from "../services/office.service";
+import {Redirect, useHistory} from "react-router-dom";
 
 const MainNav: React.FC = () => {
-    const {isLoggedIn, logout, usertype, officeId} = useContext(AuthContext);
+    const {isLoggedIn, logout, usertype, officeId, office_name} = useContext(AuthContext);
     const history = useHistory();
-    const [officeName, setOfficeName] = useState<string>();
 
     const logOutHandler = () => {
         logout();
-        setOfficeName(undefined);
-        return <Redirect to='/' />;
+        return <Redirect to='/'/>;
     }
-
 
 
     let userRootRights = new Map<string, string[]>();
@@ -29,13 +25,13 @@ const MainNav: React.FC = () => {
             if (usertype) {
                 let alloedPaths = userRootRights.get(usertype);
                 const match = alloedPaths?.find(path => pathname.includes(path));
-                if(!match) {
+                if (!match) {
                     const redirectPath = alloedPaths ? alloedPaths[0] : '/';
                     history.push(redirectPath);
                 }
 
                 if (history.location.pathname === '/') {
-                    if(usertype === 'SYS_ADMIN') {
+                    if (usertype === 'SYS_ADMIN') {
                         history.push('/usuarios')
                     } else {
                         history.push('/candidatos')
@@ -51,20 +47,12 @@ const MainNav: React.FC = () => {
 
     useEffect(() => {
         redirectHandler();
-    })
-
-    useEffect(() => {
-        if(officeId)
-        OfficeService.getOfficeByUuid(officeId)
-            .then(res => {
-                setOfficeName(res.parsedBody?.data.name)
-            })
-    }, [officeId])
+    }, [isLoggedIn, logout, usertype, officeId, office_name])
 
     return (
         <nav className="navbar navbar-expand-lg navbar-light bg-light">
             <div className="container-fluid">
-                <h3>CANDIDATOSGO {officeName ? <small> ( {officeName} )</small> : null}</h3>
+                <h3>CANDIDATOSGO {office_name ? <small> ( {office_name} )</small> : null}</h3>
                 {
                     isLoggedIn ? (
                         <div className="d-flex">

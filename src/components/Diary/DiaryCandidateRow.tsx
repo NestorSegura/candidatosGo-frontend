@@ -1,6 +1,7 @@
 import * as React from "react";
 import moment from "moment";
 import {UICandidateWithProcessInformation} from "../../services/models/UICandidate";
+import {Link} from "react-router-dom";
 
 interface DiaryCandidateRowI {
     candidates: UICandidateWithProcessInformation[];
@@ -20,6 +21,10 @@ const DiaryCandidateRow: React.FC<DiaryCandidateRowI> = (props: DiaryCandidateRo
                         <td>{candidate.lastname}</td>
                         <td>{inrerviewDateDay}</td>
                         <td>{interviewDateTime}</td>
+                        <td>
+                            <Link className="btn btn-outline-primary"
+                                  to={`/candidatos/${candidate.id}`} target="_blank">Detalles</Link>
+                        </td>
                     </tr>
                 }
             )

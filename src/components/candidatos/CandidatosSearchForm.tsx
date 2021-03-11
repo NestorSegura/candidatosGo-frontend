@@ -49,7 +49,7 @@ const CandidatosSearchForm: React.FC<CandidatosSearchFormProps> = (props: Candid
             phone1,
             phone2,
             dni,
-            office_id: officeId
+            office_id: officeId as string
         }
         CandidatesService.saveCandidate<UICandidate>(newCandidate)
             .then(response => {

@@ -15,7 +15,7 @@ const CandidatesToCallPage: React.FC = () => {
 
     useEffect(() => {
         const fetchData = async () => {
-            return CandidatesService.getCandidatesToCallByOffice(officeId)
+            return CandidatesService.getCandidatesToCallByOffice(officeId as string)
         }
         if (officeId) {
             fetchData()

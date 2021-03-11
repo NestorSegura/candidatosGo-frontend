@@ -4,10 +4,12 @@ import PageWrapper from "../components/pagewrapper/PageWrapper";
 import CreateUsersForm from "../components/users/CreateUsersForm";
 import ModifyUsers from "../components/users/ModifyUsers";
 import {UIUser} from "../services/models/UIUser";
+import Alert from "../components/modals/Alert";
 
 const UsuariosPage: React.FC = () => {
     const [createUserPage, setCreateUserPage] = useState<boolean>(true);
     const [userToEdit, setUserToEdit] = useState<UIUser>();
+    const [showEditAlert, setShowEditAlert] = useState<boolean>(false);
 
     return (
         <PageWrapper>
@@ -23,12 +25,22 @@ const UsuariosPage: React.FC = () => {
                     modificar usuarios
                 </button>
             </div>
-            <CreateUsersForm userToEdit={userToEdit} editionMode={!createUserPage}/>
             {
-                !createUserPage && <ModifyUsers
-                    userToEditHandler={(user: UIUser) => {
-                        setUserToEdit(user)
-                    }}/>
+                !createUserPage ? (<>
+                    {
+                        showEditAlert ? <Alert shouldAppear={showEditAlert}
+                                               onCancelHandler={() => setShowEditAlert(false)}
+                                               cancelText="Cancelar">
+                            <CreateUsersForm userToEdit={userToEdit} editionMode={!createUserPage}/>
+                        </Alert> : null
+                    }
+                    <ModifyUsers
+                        userToEditHandler={(user: UIUser) => {
+                            setShowEditAlert(true);
+                            setUserToEdit(user)
+                        }}/>
+                </>) : <CreateUsersForm userToEdit={userToEdit} editionMode={!createUserPage}/>
+
             }
         </PageWrapper>
     )

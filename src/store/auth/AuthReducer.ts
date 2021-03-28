@@ -1,15 +1,14 @@
-import * as React from 'react';
+import * as React from "react";
+import moment from "moment";
 import {Dispatch} from "react";
 
-interface successResponse {
-    success: boolean;
-    officeUuid: string;
-    userUuid: string;
-    userType: string;
-    login: boolean
+export const initialState = {
+    loading: false,
+    loggedIn: false,
+    dispatch: () => null
 }
 
-interface AuthStateI {
+export interface AuthStateI {
     loading: boolean;
     loggedIn: boolean,
     error?: string,
@@ -17,6 +16,14 @@ interface AuthStateI {
     userUuid?: string;
     userType?: string;
     dispatch: Dispatch<AuthAction>
+}
+
+interface successResponse {
+    success: boolean;
+    officeUuid: string;
+    userUuid: string;
+    userType: string;
+    login: boolean
 }
 
 export type AuthAction =
@@ -28,7 +35,6 @@ export type AuthAction =
     | { type: 'LOGOUT_SUCCESS', payload: { login: boolean}}
     | { type: 'LOGOUT_FAIL', payload: { login: boolean, error: string}};
 
-
 export const AuthReducer: React.Reducer<AuthStateI, AuthAction> = (state, action) => {
     switch (action.type) {
         case 'LOGIN_REQUEST':
@@ -37,6 +43,7 @@ export const AuthReducer: React.Reducer<AuthStateI, AuthAction> = (state, action
             return {
                 ...state,
                 loading: false,
+                loggedIn: true,
                 officeUuid: action.payload.officeUuid,
                 userUuid: action.payload.userUuid,
                 userType: action.payload.userType
@@ -53,6 +60,7 @@ export const AuthReducer: React.Reducer<AuthStateI, AuthAction> = (state, action
                 loading: true,
             }
         case "LOGOUT_SUCCESS":
+
             return {
                 ...state,
                 loading: false,
@@ -66,7 +74,6 @@ export const AuthReducer: React.Reducer<AuthStateI, AuthAction> = (state, action
                 error: action.payload.error
             }
         case "INIT_STATE": {
-            const token = localStorage.getItem('token');
             const expires = localStorage.getItem('expires');
             const userType = localStorage.getItem('usertype');
             const office_uuid = localStorage.getItem('office_id');
@@ -74,42 +81,12 @@ export const AuthReducer: React.Reducer<AuthStateI, AuthAction> = (state, action
             return {
                 ...state,
                 loading: false,
-                loggedIn: !!token && !!expires,
+                loggedIn: moment().isBefore(expires ? JSON.parse(expires): ''),
                 officeUuid: office_uuid as string,
                 userType: userType as string,
-                //token,
-                //expires
             }
         }
         default:
             return state;
     }
-}
-
-export const initialState = {
-    loading: false,
-    loggedIn: false,
-    dispatch: () => null
-}
-
-export const AuthContext = React.createContext<Partial<AuthStateI>>({});
-
-export const AuthProvider: React.FC = (props) => {
-    const [state, dispatch] = React.useReducer(AuthReducer, initialState);
-
-    return (
-        <AuthContext.Provider
-            value={{
-                loading: state.loading,
-                loggedIn: state.loggedIn,
-                error: state.error,
-                officeUuid: state.officeUuid,
-                userType: state.userType,
-                userUuid: state.userUuid,
-                dispatch,
-            }}
-        >
-            {props.children}
-        </AuthContext.Provider>
-    );
 }

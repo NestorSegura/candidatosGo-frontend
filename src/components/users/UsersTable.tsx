@@ -3,7 +3,7 @@ import {useContext, useEffect, useState} from "react";
 import {UIUser} from "../../services/models/UIUser";
 import UserRow from "./UserRow";
 import {deepEqual} from "../../utils/comparisonMethods";
-import {AuthContext} from "../../store/auth/AuthReducer";
+import {MainContext} from "../../store/MainReducer";
 
 interface UserListProps {
     userList: UIUser[];
@@ -14,7 +14,7 @@ interface UserListProps {
 
 const UsersTable: React.FC<UserListProps> = (props: UserListProps) => {
 
-    const {officeUuid, userType} = useContext(AuthContext);
+    const {officeUuid, userType} = useContext(MainContext);
     const [usersList, setUsersList] = useState<UIUser[]>();
 
     useEffect(() => {

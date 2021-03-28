@@ -6,7 +6,7 @@ import OfficeService from "../../services/office.service";
 import {deepEqual} from "../../utils/comparisonMethods";
 import {UIUser} from "../../services/models/UIUser";
 import UserService from "../../services/user.service";
-import {AuthContext} from "../../store/auth/AuthReducer";
+import {MainContext} from "../../store/MainReducer";
 
 interface Fields {
     value: string;
@@ -31,7 +31,7 @@ const CreateUsersForm: React.FC<CreateUsersFormInit> = (props) => {
     const [sponsors, setSponsors] = useState<UIOffice[]>([]);
     const [sponsor, setSponsor] = useState<string>();
 
-    const {userType, officeUuid} = useContext(AuthContext);
+    const {userType, officeUuid} = useContext(MainContext);
 
     function clearForm() {
         setUsername('');

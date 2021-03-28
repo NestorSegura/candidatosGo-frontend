@@ -2,11 +2,11 @@ import * as React from "react";
 import {useContext, useEffect, useState} from "react";
 import './SideNavStyles.css';
 import {NavLink} from "react-router-dom";
-import {AuthContext} from "../../store/auth/AuthReducer";
+import {MainContext} from "../../store/MainReducer";
 
 const SideNav: React.FC = () => {
 
-    const {loggedIn} = useContext(AuthContext);
+    const {loggedIn} = useContext(MainContext);
 
     const [showCandidates, setShowCandidates] = useState<boolean>(false);
     const [showUsers, setShowUsers] = useState<boolean>(false);

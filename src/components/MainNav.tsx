@@ -1,11 +1,11 @@
 import * as React from "react";
 import {useContext, useEffect} from "react";
 import {Redirect, useHistory} from "react-router-dom";
-import {AuthContext} from "../store/auth/AuthReducer";
 import AuthService from "../services/auth.service";
+import {MainContext} from "../store/MainReducer";
 
 const MainNav: React.FC = () => {
-    const {loggedIn, userType, officeUuid, dispatch} = useContext(AuthContext);
+    const {loggedIn, userType, officeUuid, dispatch} = useContext(MainContext);
 
     const history = useHistory();
 

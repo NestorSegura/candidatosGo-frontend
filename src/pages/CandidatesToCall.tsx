@@ -5,13 +5,13 @@ import CandidateList from "../components/candidatos/CandidateList";
 import {UICandidate} from "../services/models/UICandidate";
 import CandidatesService from "../services/candidates.service";
 import {deepEqual} from "../utils/comparisonMethods";
-import {AuthContext} from "../store/auth/AuthReducer";
+import {MainContext} from "../store/MainReducer";
 
 const CandidatesToCallPage: React.FC = () => {
 
     const [candidates, setCandidates] = useState<UICandidate[]>([]);
 
-    const {officeUuid} = useContext(AuthContext);
+    const {officeUuid} = useContext(MainContext);
 
     useEffect(() => {
         const fetchData = async () => {

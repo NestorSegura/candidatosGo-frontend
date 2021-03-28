@@ -6,7 +6,7 @@ import CandidatesService from "../../services/candidates.service";
 import {deepEqual} from "../../utils/comparisonMethods";
 import DatePicker from "react-datepicker";
 import DiaryCandidatesTable from "./DiaryCandidatesTable";
-import {AuthContext} from "../../store/auth/AuthReducer";
+import {MainContext} from "../../store/MainReducer";
 
 const DiaryInterviews: React.FC = (props) => {
 
@@ -14,7 +14,7 @@ const DiaryInterviews: React.FC = (props) => {
     const [candidates, setCandidates] = useState<UICandidateWithProcessInformation[]>([]);
     const [error, setError] = useState<string>();
 
-    const {officeUuid} = useContext(AuthContext);
+    const {officeUuid} = useContext(MainContext);
 
     const onSearchHandler = (e: React.MouseEvent) => {
         e.preventDefault();

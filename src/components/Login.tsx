@@ -1,15 +1,15 @@
 import * as React from 'react';
 import {useContext, useEffect, useState} from 'react';
-import {AuthContext} from "../store/auth/AuthReducer";
 import AuthService, {ErrorMessageResponse, LoginResponse} from "../services/auth.service";
 import moment from "moment";
+import {MainContext} from "../store/MainReducer";
 
 const Login: React.FC = () => {
     const [username, setUsername] = useState<string>('');
     const [password, setPassword] = useState<string>('');
     const [firstLoad, setFirstLoad] = useState<boolean>(true);
 
-    const {dispatch, error} = useContext(AuthContext);
+    const {dispatch, error} = useContext(MainContext);
 
     const handleLogin = async () => {
         dispatch && dispatch({
@@ -37,7 +37,6 @@ const Login: React.FC = () => {
                             userType: response.user.user_type
                         }
                     })
-
                 } else {
                     response = response as ErrorMessageResponse
                     dispatch && dispatch({

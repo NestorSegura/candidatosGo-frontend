@@ -10,12 +10,12 @@ import UsuariosPage from "./pages/Usuarios";
 import ConfigurationPage from "./pages/ConfigurationPage";
 import CandidatesToCallPage from "./pages/CandidatesToCall";
 import Diary from "./pages/Diary";
-import {AuthProvider} from "./store/auth/AuthReducer";
+import {MainProvider} from "./store/MainReducer";
 
 ReactDOM.render(
     <React.StrictMode>
         <BrowserRouter>
-            <AuthProvider>
+            <MainProvider>
                 <MainNav/>
                 <Switch>
                     <Route path="/agenda" component={Diary} />
@@ -26,7 +26,7 @@ ReactDOM.render(
                     <Route path="/candidatos" component={CandidatosDashboard}/>
                     <Route exact path="/" component={Login}/>
                 </Switch>
-            </AuthProvider>
+            </MainProvider>
         </BrowserRouter>
     </React.StrictMode>
     ,

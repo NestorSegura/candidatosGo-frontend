@@ -1,7 +1,7 @@
 import * as React from "react";
 import {useEffect, useState} from "react";
 import {UICandidate} from "../../services/models/UICandidate";
-import {Link, useHistory} from "react-router-dom";
+import {Link} from "react-router-dom";
 import OfficeService from "../../services/office.service";
 import {UIOffice} from "../../services/models/UIOffice";
 import {deepEqual} from "../../utils/comparisonMethods";

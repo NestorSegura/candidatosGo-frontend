@@ -9,7 +9,7 @@ import CandidateEditForm from "./CandidateEditForm";
 import CandidateOfficeDetails from "./CandidateOfficeDetails";
 import {UIOffice} from "../../services/models/UIOffice";
 import OfficeService from "../../services/office.service";
-import {AuthContext} from "../../store/auth/AuthReducer";
+import {MainContext} from "../../store/MainReducer";
 
 interface CandidateFileProps {
     id: string;
@@ -88,7 +88,7 @@ const CandidateFile: React.FC<CandidateFileProps> = (props: CandidateFileProps) 
         ))
     }
 
-    const {officeUuid} = useContext(AuthContext);
+    const {officeUuid} = useContext(MainContext);
 
     return (
         <PageWrapper>

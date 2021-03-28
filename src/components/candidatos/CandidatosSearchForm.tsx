@@ -3,7 +3,7 @@ import {useContext, useState} from "react";
 import CandidatesService from "../../services/candidates.service";
 import {useHistory} from "react-router-dom";
 import {UICandidate} from "../../services/models/UICandidate";
-import {AuthContext} from "../../store/auth/AuthReducer";
+import {MainContext} from "../../store/MainReducer";
 
 interface CandidatosSearchFormProps {
     setCandidates: (candidates: UICandidate[]) => void
@@ -22,7 +22,7 @@ const CandidatosSearchForm: React.FC<CandidatosSearchFormProps> = (props: Candid
 
     const history = useHistory();
 
-    const {officeUuid} = useContext(AuthContext);
+    const {officeUuid} = useContext(MainContext);
 
     const onSearchClickHandler = (e: React.MouseEvent) => {
         e.preventDefault();

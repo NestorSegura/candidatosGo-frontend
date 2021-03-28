@@ -4,20 +4,20 @@ import PageWrapper from "../components/pagewrapper/PageWrapper";
 import CandidateList from "../components/candidatos/CandidateList";
 import {UICandidate} from "../services/models/UICandidate";
 import CandidatesService from "../services/candidates.service";
-import {AuthContext} from "../components/auth/AuthContext";
 import {deepEqual} from "../utils/comparisonMethods";
+import {AuthContext} from "../store/auth/AuthReducer";
 
 const CandidatesToCallPage: React.FC = () => {
 
     const [candidates, setCandidates] = useState<UICandidate[]>([]);
 
-    const {officeId} = useContext(AuthContext);
+    const {officeUuid} = useContext(AuthContext);
 
     useEffect(() => {
         const fetchData = async () => {
-            return CandidatesService.getCandidatesToCallByOffice(officeId as string)
+            return CandidatesService.getCandidatesToCallByOffice(officeUuid as string)
         }
-        if (officeId) {
+        if (officeUuid) {
             fetchData()
                 .then(result => {
                     if (!deepEqual(result.parsedBody?.data, candidates)) {
@@ -25,7 +25,7 @@ const CandidatesToCallPage: React.FC = () => {
                     }
                 }).catch(error => console.error(error));
         }
-    }, [officeId, candidates])
+    }, [officeUuid, candidates])
 
     return (
         <PageWrapper>

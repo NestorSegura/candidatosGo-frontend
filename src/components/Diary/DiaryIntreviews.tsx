@@ -1,12 +1,12 @@
 import * as React from "react";
 import {useContext, useState} from "react";
 import {UICandidateWithProcessInformation} from "../../services/models/UICandidate";
-import {AuthContext} from "../auth/AuthContext";
 import moment from "moment";
 import CandidatesService from "../../services/candidates.service";
 import {deepEqual} from "../../utils/comparisonMethods";
 import DatePicker from "react-datepicker";
 import DiaryCandidatesTable from "./DiaryCandidatesTable";
+import {AuthContext} from "../../store/auth/AuthReducer";
 
 const DiaryInterviews: React.FC = (props) => {
 
@@ -14,14 +14,14 @@ const DiaryInterviews: React.FC = (props) => {
     const [candidates, setCandidates] = useState<UICandidateWithProcessInformation[]>([]);
     const [error, setError] = useState<string>();
 
-    const {officeId} = useContext(AuthContext);
+    const {officeUuid} = useContext(AuthContext);
 
     const onSearchHandler = (e: React.MouseEvent) => {
         e.preventDefault();
         setError(undefined)
-        if (date && officeId) {
+        if (date && officeUuid) {
             const reqDate = moment(date.toString()).format('yyyy-MM-DD')
-            CandidatesService.getCandidatesForInterviews(officeId, reqDate)
+            CandidatesService.getCandidatesForInterviews(officeUuid, reqDate)
                 .then((response) => {
                     if (response.parsedBody?.data && !deepEqual(candidates, response.parsedBody?.data)) {
                         setCandidates(response.parsedBody.data);

@@ -1,14 +1,32 @@
 import * as React from "react";
 import {useContext, useEffect} from "react";
-import {AuthContext} from "./auth/AuthContext";
 import {Redirect, useHistory} from "react-router-dom";
+import {AuthContext} from "../store/auth/AuthReducer";
+import AuthService from "../services/auth.service";
 
 const MainNav: React.FC = () => {
-    const {isLoggedIn, logout, usertype, officeId, office_name} = useContext(AuthContext);
+    const {loggedIn, userType, officeUuid, dispatch} = useContext(AuthContext);
+
     const history = useHistory();
 
     const logOutHandler = () => {
-        logout();
+        dispatch && dispatch({
+            type: 'LOGIN_REQUEST'
+        })
+        AuthService.logout()
+            .then(() => dispatch && dispatch({
+                type: 'LOGOUT_SUCCESS',
+                payload: {
+                    login: false,
+                }
+            }))
+            .catch(error => dispatch && dispatch({
+                type: 'LOGOUT_FAIL',
+                payload: {
+                    login: false,
+                    error: error
+                }
+            }));
         return <Redirect to='/'/>;
     }
 
@@ -19,11 +37,11 @@ const MainNav: React.FC = () => {
     userRootRights.set('ASISTENCE', ['candidatos']);
 
     const redirectHandler = () => {
-        if (isLoggedIn) {
+        if (loggedIn) {
 
             const {pathname} = history.location;
-            if (usertype) {
-                let alloedPaths = userRootRights.get(usertype);
+            if (userType) {
+                let alloedPaths = userRootRights.get(userType);
                 const match = alloedPaths?.find(path => pathname.includes(path));
                 if (!match) {
                     const redirectPath = alloedPaths ? alloedPaths[0] : '/';
@@ -31,7 +49,7 @@ const MainNav: React.FC = () => {
                 }
 
                 if (history.location.pathname === '/') {
-                    if (usertype === 'SYS_ADMIN') {
+                    if (userType === 'SYS_ADMIN') {
                         history.push('/usuarios')
                     } else {
                         history.push('/candidatos')
@@ -47,14 +65,14 @@ const MainNav: React.FC = () => {
 
     useEffect(() => {
         redirectHandler();
-    }, [isLoggedIn, logout, usertype, officeId, office_name])
+    }, [loggedIn, userType, officeUuid])
 
     return (
         <nav className="navbar navbar-expand-lg navbar-light bg-light">
             <div className="container-fluid">
-                <h3>CANDIDATOSGO {office_name ? <small> ( {office_name} )</small> : null}</h3>
+                <h3>CANDIDATOSGO {false ? <small> ( {null} )</small> : null}</h3>
                 {
-                    isLoggedIn ? (
+                    loggedIn ? (
                         <div className="d-flex">
                             <button className="btn btn-outline-danger" type="button" onClick={logOutHandler}>logout
                             </button>

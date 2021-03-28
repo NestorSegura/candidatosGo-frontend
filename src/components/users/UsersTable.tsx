@@ -2,8 +2,8 @@ import * as React from "react";
 import {useContext, useEffect, useState} from "react";
 import {UIUser} from "../../services/models/UIUser";
 import UserRow from "./UserRow";
-import {AuthContext} from "../auth/AuthContext";
 import {deepEqual} from "../../utils/comparisonMethods";
+import {AuthContext} from "../../store/auth/AuthReducer";
 
 interface UserListProps {
     userList: UIUser[];
@@ -14,20 +14,20 @@ interface UserListProps {
 
 const UsersTable: React.FC<UserListProps> = (props: UserListProps) => {
 
-    const {officeId, usertype} = useContext(AuthContext);
+    const {officeUuid, userType} = useContext(AuthContext);
     const [usersList, setUsersList] = useState<UIUser[]>();
 
     useEffect(() => {
         let list = props.userList;
-        if (usertype !== 'SYS_ADMIN') {
-            list = list.filter(user => user.sponsor_uuid === officeId || user.office_id === officeId);
+        if (userType !== 'SYS_ADMIN') {
+            list = list.filter(user => user.sponsor_uuid === officeUuid || user.office_id === officeUuid);
         }
         if (!deepEqual(usersList, list)) {
             setUsersList(list);
         }
-    }, [officeId, usertype, usersList, props.userList])
+    }, [officeUuid, userType, usersList, props.userList])
 
-    return (usertype && officeId) ? (
+    return (userType && officeUuid) ? (
         <div>
             <table className="table table-bordered">
                 <thead>

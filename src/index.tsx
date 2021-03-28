@@ -2,7 +2,6 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import reportWebVitals from './reportWebVitals';
 import {BrowserRouter, Route, Switch} from "react-router-dom";
-import AutProvider from "./components/auth/AuthContext";
 import CandidatePage from "./pages/CandidatePage";
 import CandidatosDashboard from "./pages/Dashboard";
 import Login from "./components/Login";
@@ -11,11 +10,12 @@ import UsuariosPage from "./pages/Usuarios";
 import ConfigurationPage from "./pages/ConfigurationPage";
 import CandidatesToCallPage from "./pages/CandidatesToCall";
 import Diary from "./pages/Diary";
+import {AuthProvider} from "./store/auth/AuthReducer";
 
 ReactDOM.render(
     <React.StrictMode>
         <BrowserRouter>
-            <AutProvider>
+            <AuthProvider>
                 <MainNav/>
                 <Switch>
                     <Route path="/agenda" component={Diary} />
@@ -26,7 +26,7 @@ ReactDOM.render(
                     <Route path="/candidatos" component={CandidatosDashboard}/>
                     <Route exact path="/" component={Login}/>
                 </Switch>
-            </AutProvider>
+            </AuthProvider>
         </BrowserRouter>
     </React.StrictMode>
     ,

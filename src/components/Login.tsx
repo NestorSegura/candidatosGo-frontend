@@ -1,41 +1,68 @@
 import * as React from 'react';
-import {useContext, useState} from 'react';
+import {useContext, useEffect, useState} from 'react';
+import {AuthContext} from "../store/auth/AuthReducer";
 import AuthService, {ErrorMessageResponse, LoginResponse} from "../services/auth.service";
-import {AuthContext, LocalStorageProps} from "./auth/AuthContext";
-import {Redirect, useHistory} from 'react-router-dom';
+import moment from "moment";
 
 const Login: React.FC = () => {
     const [username, setUsername] = useState<string>('');
     const [password, setPassword] = useState<string>('');
-    const [error, setError] = useState<string>('');
+    const [firstLoad, setFirstLoad] = useState<boolean>(true);
 
-    const {login} = useContext(AuthContext);
+    const {dispatch, error} = useContext(AuthContext);
 
     const handleLogin = async () => {
+        dispatch && dispatch({
+            type: 'LOGIN_REQUEST'
+        })
         AuthService.login(username, password)
             .then(async (response) => {
                 if (response.success) {
                     response = response as LoginResponse;
-                    const localstorage: LocalStorageProps = {
-                        token: response.token,
-                        expiresIn: response.expires,
-                        userType: response.user.user_type,
-                        office_id: response.user.office_id
-                    }
-                    await login(localstorage, () => {
-                        setError('');
-                        return <Redirect to="/" />
-                    });
+                    const expiresArray = Array.from(response.expires);
+                    const expires = moment().add(JSON.parse(expiresArray[0]), expiresArray[1]);
+
+                    localStorage.setItem('token', response.token);
+                    localStorage.setItem('expires', JSON.stringify(expires.valueOf()));
+                    localStorage.setItem('usertype', response.user.user_type);
+                    localStorage.setItem('office_id', response.user.office_id);
+
+                    dispatch && dispatch({
+                        type: 'LOGIN_SUCCESS',
+                        payload: {
+                            success: true,
+                            login: true,
+                            officeUuid: response.user.office_id,
+                            userUuid: '',
+                            userType: response.user.user_type
+                        }
+                    })
+
                 } else {
                     response = response as ErrorMessageResponse
-                    setError(response.msg)
+                    dispatch && dispatch({
+                        type: 'LOGIN_ERROR',
+                        payload: {
+                            error: response.msg
+                        }
+                    })
                 }
             })
             .catch(error => {
                 console.error(error);
-                setError(`TECHNICAL ERROR ${error}`);
+                dispatch && dispatch({
+                    type: 'LOGIN_ERROR',
+                    payload: {error: `TECHNICAL ERROR ${error}`}
+                })
             });
     }
+
+    useEffect(() => {
+        if (firstLoad) {
+            dispatch && dispatch({type: 'INIT_STATE'})
+            setFirstLoad(false);
+        }
+    }, [firstLoad])
 
     return (
         <div className="container mt-5">

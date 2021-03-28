@@ -9,7 +9,7 @@ import CandidateEditForm from "./CandidateEditForm";
 import CandidateOfficeDetails from "./CandidateOfficeDetails";
 import {UIOffice} from "../../services/models/UIOffice";
 import OfficeService from "../../services/office.service";
-import {AuthContext} from "../auth/AuthContext";
+import {AuthContext} from "../../store/auth/AuthReducer";
 
 interface CandidateFileProps {
     id: string;
@@ -88,7 +88,7 @@ const CandidateFile: React.FC<CandidateFileProps> = (props: CandidateFileProps) 
         ))
     }
 
-    const {officeId} = useContext(AuthContext);
+    const {officeUuid} = useContext(AuthContext);
 
     return (
         <PageWrapper>
@@ -99,7 +99,7 @@ const CandidateFile: React.FC<CandidateFileProps> = (props: CandidateFileProps) 
                         <CandidateEditForm candidate={candidate} editHandler={setEdit}/> :
                         <>
                             {renderPersonalContent()}
-                            { office?.uuid === officeId &&
+                            { office?.uuid === officeUuid &&
                                 <div className="col">
                                     <button type="button" className="btn btn-outline-primary"
                                             onClick={editCandidateHandler}>
@@ -112,7 +112,7 @@ const CandidateFile: React.FC<CandidateFileProps> = (props: CandidateFileProps) 
             </div>
             <div className="p-4 d-flex flex-row-reverse align-items-start justify-content-start flex-wrap">
                 <div className="col-12 col-sm-4 mb-4"><CandidateOfficeDetails office={office as UIOffice} registrationDate={candidate?.creationDate as string} /></div>
-                {candidate?.id && <div className="col-12 col-sm-8"><ProcessInformationCreateEditForm buttonDisabled={office?.uuid !== officeId} candidateId={parseInt(candidate.id)}/></div>}
+                {candidate?.id && <div className="col-12 col-sm-8"><ProcessInformationCreateEditForm buttonDisabled={office?.uuid !== officeUuid} candidateId={parseInt(candidate.id)}/></div>}
             </div>
         </PageWrapper>
 

@@ -1,12 +1,12 @@
 import * as React from "react";
 import {ChangeEvent, useContext, useEffect, useState} from "react";
 import AuthService from "../../services/auth.service";
-import {AuthContext} from "../auth/AuthContext";
 import {UIOffice} from "../../services/models/UIOffice";
 import OfficeService from "../../services/office.service";
 import {deepEqual} from "../../utils/comparisonMethods";
 import {UIUser} from "../../services/models/UIUser";
 import UserService from "../../services/user.service";
+import {AuthContext} from "../../store/auth/AuthReducer";
 
 interface Fields {
     value: string;
@@ -24,14 +24,14 @@ const sysadmin = 'SYS_ADMIN';
 const CreateUsersForm: React.FC<CreateUsersFormInit> = (props) => {
     const [userName, setUsername] = useState<string>();
     const [password, setPassword] = useState<string>();
-    const [userType, setUserType] = useState<string>();
+    const [_userType, setUserType] = useState<string>();
     const [success, setSuccess] = useState<boolean>(false);
     const [msg, setMsg] = useState<string>();
     const [allowdFileds, setAllowedFields] = useState<Fields[]>();
     const [sponsors, setSponsors] = useState<UIOffice[]>([]);
     const [sponsor, setSponsor] = useState<string>();
 
-    const {usertype, officeId} = useContext(AuthContext);
+    const {userType, officeUuid} = useContext(AuthContext);
 
     function clearForm() {
         setUsername('');
@@ -41,8 +41,8 @@ const CreateUsersForm: React.FC<CreateUsersFormInit> = (props) => {
 
     function createUpdateUser() {
         if (!props.editionMode) {
-            if ((userName && password && userType)) {
-                AuthService.register(userName, password, userType, officeId as string, sponsor)
+            if ((userName && password && _userType)) {
+                AuthService.register(userName, password, _userType, officeUuid as string, sponsor)
                     .then(res => {
                         setSuccess(res.success);
                         setMsg(res.msg);
@@ -58,9 +58,9 @@ const CreateUsersForm: React.FC<CreateUsersFormInit> = (props) => {
             const updatedUser: UIUser = {
                 id: props.userToEdit?.id as number,
                 name: userName as string,
-                user_type: userType as string,
+                user_type: _userType as string,
                 sponsor_uuid: sponsor,
-                office_id: officeId as string,
+                office_id: officeUuid as string,
             }
             UserService.updateUser(updatedUser, password)
                 .then(response => {
@@ -109,25 +109,25 @@ const CreateUsersForm: React.FC<CreateUsersFormInit> = (props) => {
             }
         ]
         const allowedFields: Fields[] = userTypesFields.filter(field => {
-            return field.allow.find(userTypeField => userTypeField === usertype)
+            return field.allow.find(userTypeField => userTypeField === userType)
         })
         setAllowedFields(allowedFields)
 
-    }, [usertype])
+    }, [userType])
 
     useEffect(() => {
         const fetchData = async () => {
             let allOffices = await OfficeService.getAllOffices();
-            if (usertype === sysadmin && allOffices.parsedBody?.data && !deepEqual(sponsors, allOffices.parsedBody?.data)) {
+            if (userType === sysadmin && allOffices.parsedBody?.data && !deepEqual(sponsors, allOffices.parsedBody?.data)) {
                 setSponsors(allOffices.parsedBody.data)
             }
         };
 
         fetchData();
-    }, [usertype, sponsors])
+    }, [userType, sponsors])
 
     function userIsAdmin() {
-        return usertype === sysadmin;
+        return userType === sysadmin;
     }
 
     useEffect(() => {
@@ -166,7 +166,7 @@ const CreateUsersForm: React.FC<CreateUsersFormInit> = (props) => {
                 {allowdFileds ? <div className="col-12 col-sm-6">
                     <label htmlFor="usertype" className="form-label me-3">Tipo de usuario </label>
                     <select className="form-select" aria-label="Default select example" id="usertype"
-                            onChange={onUserTypeHandler} defaultValue='NO_VALID' value={userType}>
+                            onChange={onUserTypeHandler} defaultValue='NO_VALID' value={_userType}>
                         <option value="NO_VALID" disabled>Elegir tipo de usuario</option>
                         {
                             allowdFileds.map((field, index) =>

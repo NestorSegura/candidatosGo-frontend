@@ -2,11 +2,11 @@ import * as React from "react";
 import {useContext, useEffect, useState} from "react";
 import './SideNavStyles.css';
 import {NavLink} from "react-router-dom";
-import {AuthContext} from "../auth/AuthContext";
+import {AuthContext} from "../../store/auth/AuthReducer";
 
 const SideNav: React.FC = () => {
 
-    const {isLoggedIn} = useContext(AuthContext);
+    const {loggedIn} = useContext(AuthContext);
 
     const [showCandidates, setShowCandidates] = useState<boolean>(false);
     const [showUsers, setShowUsers] = useState<boolean>(false);
@@ -50,10 +50,10 @@ const SideNav: React.FC = () => {
 
     useEffect(() => {
         const userTypeFromLocalStore = localStorage.getItem("usertype");
-        if (isLoggedIn && userType !== userTypeFromLocalStore) {
+        if (loggedIn && userType !== userTypeFromLocalStore) {
             setUserType(userTypeFromLocalStore as string);
         }
-    }, [isLoggedIn, userType])
+    }, [loggedIn, userType])
 
     useEffect(() => {
         renderContentForUserType();

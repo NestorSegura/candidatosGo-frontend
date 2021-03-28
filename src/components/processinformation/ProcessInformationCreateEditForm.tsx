@@ -7,6 +7,7 @@ import DatePicker from "react-datepicker";
 import moment from 'moment';
 import "react-datepicker/dist/react-datepicker.css";
 import {checkNullString} from "../../utils/checkMethods";
+import ProcessInformation from "./ProcessInformation";
 
 interface ProcessInformationCreateEditFormProps {
     candidateId: number;
@@ -100,8 +101,12 @@ const ProcessInformationCreateEditForm: React.FC<ProcessInformationCreateEditFor
         <div className="pe-5">
             <h3 className="mb-3">Información del proceso</h3>
             <form className="mb-4">
-                <div className="col-12  d-flex mb-3">
-                    <p className="me-3">Contactado: </p>
+                <ProcessInformation
+                    changesAllow={!props.buttonDisabled}
+                    onSaveHandler={saveChangesHandler}
+                    label={'Contactado:'}
+                    value={called ?? 'sin registro'}>
+                    <p className="me-3 mb-0">Contactado: </p>
                     <div className="form-check me-3">
                         <input className="form-check-input"
                                type="radio"
@@ -126,9 +131,13 @@ const ProcessInformationCreateEditForm: React.FC<ProcessInformationCreateEditFor
                             No
                         </label>
                     </div>
-                </div>
-                <div className="col-12">
-                    <label htmlFor="mail" className="form-label me-3">Fecha de entrevista: </label>
+                </ProcessInformation>
+
+                <ProcessInformation onSaveHandler={saveChangesHandler}
+                                    label='Fecha de entrevista:'
+                                    value={interviewDate?.toISOString() ?? 'sin fecha aún'}
+                                    changesAllow={!props.buttonDisabled}>
+                    <label htmlFor="mail" className="form-label me-3 mb-0">Fecha de entrevista: </label>
                     <DatePicker selected={interviewDate}
                                 className="form-control"
                                 showTimeInput
@@ -136,12 +145,14 @@ const ProcessInformationCreateEditForm: React.FC<ProcessInformationCreateEditFor
                                 dateFormat="dd/MM/yyyy HH:mm"
                                 placeholderText="sin fecha aún"
                                 onChange={date => setInterviewDate(date as Date)}/>
-                </div>
 
-                <hr className="mt-4 col-12"/>
+                </ProcessInformation>
 
-                <div className="col-12  d-flex mb-3">
-                    <p className="me-3">Preselecionado: </p>
+                <ProcessInformation onSaveHandler={saveChangesHandler}
+                                    label='Preselecionado:'
+                                    value={preselected ?? 'sin registro'}
+                                    changesAllow={!props.buttonDisabled}>
+                    <p className="me-3 mb-0">Preselecionado: </p>
                     <div className="form-check me-3">
                         <input className="form-check-input"
                                type="radio"
@@ -166,8 +177,12 @@ const ProcessInformationCreateEditForm: React.FC<ProcessInformationCreateEditFor
                             No
                         </label>
                     </div>
-                </div>
-                <div className="col-12 mb-3">
+                </ProcessInformation>
+
+                <ProcessInformation onSaveHandler={saveChangesHandler}
+                                    label='Comentarios de preselección:'
+                                    value={preselectedComments ?? 'sin registro'}
+                                    changesAllow={!props.buttonDisabled}>
                     <label htmlFor="preselectedComment" className="form-label">Comentario de
                         preselección</label>
                     <textarea className="form-control"
@@ -175,11 +190,12 @@ const ProcessInformationCreateEditForm: React.FC<ProcessInformationCreateEditFor
                               rows={3}
                               value={preselectedComments}
                               onChange={e => setPreselectedComments(e.target.value)}/>
-                </div>
+                </ProcessInformation>
 
-                <hr className="mt-4 mb-4 col-12 "/>
-
-                <div className="col-12 mb-3">
+                <ProcessInformation onSaveHandler={saveChangesHandler}
+                                    label='Fecha de día de observación:'
+                                    value={observationDay?.toISOString() ?? 'sin fecha aún'}
+                                    changesAllow={!props.buttonDisabled}>
                     <label htmlFor="mail" className="form-label me-3">Fecha de día de observación: </label>
                     <DatePicker selected={observationDay}
                                 className="form-control"
@@ -190,10 +206,13 @@ const ProcessInformationCreateEditForm: React.FC<ProcessInformationCreateEditFor
                                 onChange={date => {
                                     setObservationDay(date as Date);
                                 }}/>
-                </div>
+                </ProcessInformation>
 
-                <div className="col-12 d-flex mb-3">
-                    <p className="me-3">Asistió a al día de observación : </p>
+                <ProcessInformation onSaveHandler={saveChangesHandler}
+                                    label='Asistió a al día de observación:'
+                                    value={asistedToObservation ?? 'sin registro'}
+                                    changesAllow={!props.buttonDisabled}>
+                    <p className="me-3 mb-0">Asistió a al día de observación: </p>
                     <div className="form-check me-3">
                         <input className="form-check-input"
                                type="radio"
@@ -218,10 +237,12 @@ const ProcessInformationCreateEditForm: React.FC<ProcessInformationCreateEditFor
                             No
                         </label>
                     </div>
-                </div>
+                </ProcessInformation>
 
-
-                <div className="col-12 mb-3">
+                <ProcessInformation onSaveHandler={saveChangesHandler}
+                                    label='Comentario día de observación:'
+                                    value={observationDayComments ?? 'sin registro'}
+                                    changesAllow={!props.buttonDisabled}>
                     <label htmlFor="assistedToObservationComment" className="form-label">Comentario día de
                         observación</label>
                     <textarea className="form-control"
@@ -229,21 +250,27 @@ const ProcessInformationCreateEditForm: React.FC<ProcessInformationCreateEditFor
                               rows={3}
                               value={observationDayComments}
                               onChange={e => setObservationDayComments(e.target.value)}/>
-                </div>
+                </ProcessInformation>
 
-                <hr className="mt-4 mb-4 col-12 "/>
+                <ProcessInformation onSaveHandler={saveChangesHandler}
+                                    label='Entrenador:'
+                                    value={trainer ?? 'sin registro'}
+                                    changesAllow={!props.buttonDisabled}>
 
-                <div className="col-12   mb-3 d-flex align-items-center">
-                    <label htmlFor="trainerText" className="form-label me-3">Entrenador: </label>
+                    <label htmlFor="trainerText" className="form-label me-3 mb-0">Entrenador: </label>
                     <input type="text"
                            className="form-control" id="trainerText"
                            value={trainer ? trainer : ""}
                            onChange={e => setTrainer(e.target.value)}
                            placeholder="nombre del entrenador"/>
-                </div>
 
-                <div className="col-12   d-flex mb-3">
-                    <p className="me-3">Admitido: </p>
+                </ProcessInformation>
+
+                <ProcessInformation onSaveHandler={saveChangesHandler}
+                                    label='Admitido:'
+                                    value={admited ?? 'sin registro'}
+                                    changesAllow={!props.buttonDisabled}>
+                    <p className="me-3 mb-0">Admitido: </p>
                     <div className="form-check me-3">
                         <input className="form-check-input"
                                type="radio"
@@ -268,58 +295,62 @@ const ProcessInformationCreateEditForm: React.FC<ProcessInformationCreateEditFor
                             No
                         </label>
                     </div>
-                </div>
+                </ProcessInformation>
 
-                <div className="col-12   mb-3">
+                <ProcessInformation onSaveHandler={saveChangesHandler}
+                                    label='Comentarios de admisión:'
+                                    value={admissionComments ?? 'sin registro'}
+                                    changesAllow={!props.buttonDisabled}>
                     <label htmlFor="admisioncomments" className="form-label">Comentarios de admisión</label>
                     <textarea className="form-control"
                               id="admisioncomments"
                               rows={3}
                               value={admissionComments}
                               onChange={e => setAdmissionComments(e.target.value)}/>
-                </div>
+                </ProcessInformation>
 
-                <hr className="mt-4 mb-4 col-12  col-md-4"/>
+                <ProcessInformation onSaveHandler={saveChangesHandler}
+                                    label='Preselecionado:'
+                                    value={preselected ?? 'sin registro'}
+                                    changesAllow={!props.buttonDisabled}>
+                    <div className="d-flex flex-column">
+                        <div className="form-check mb-3">
+                            <input className="form-check-input"
+                                   type="checkbox"
+                                   checked={down}
+                                   onChange={e => setDown(e.target.checked)}
+                                   id="downCheckbox"/>
+                            <label htmlFor="downCheckbox" className="form-check-label">Dado de baja</label>
+                        </div>
+                        {
+                            down ? (<div className="d-flex flex-column">
+                                    <div className="mb-3">
+                                        <label htmlFor="mail" className="form-label me-3">Fecha de baja: </label>
+                                        <DatePicker selected={downDate}
+                                                    showTimeInput
+                                                    timeInputLabel="Hora:"
+                                                    dateFormat="dd/MM/yyyy HH:mm"
+                                                    placeholderText="no tiene fecha de baja"
+                                                    onChange={date => setDownDate(date as Date)}/>
+                                    </div>
+                                    <div>
+                                        <label htmlFor="downcomments" className="form-label">Comentarios de baja</label>
+                                        <textarea className="form-control"
+                                                  id="downcomments"
+                                                  rows={3}
+                                                  value={downComments}
+                                                  onChange={e => setDownComments(e.target.value)}/>
+                                    </div>
 
-                <div className="col-12   d-flex mb-3">
-                    <div className="form-check">
-                        <input className="form-check-input"
-                               type="checkbox"
-                               checked={down}
-                               onChange={e => setDown(e.target.checked)}
-                               id="downCheckbox"/>
-                        <label htmlFor="downCheckbox" className="form-check-label">Dado de baja</label>
+                                </div>
+                            ) : null
+                        }
                     </div>
-                </div>
-                {
-                    down ? (<>
-                            <div className="col-12  col-md-4 mb-3">
-                                <label htmlFor="mail" className="form-label me-3">Fecha de baja: </label>
-                                <DatePicker selected={downDate}
-                                            showTimeInput
-                                            timeInputLabel="Hora:"
-                                            dateFormat="dd/MM/yyyy HH:mm"
-                                            placeholderText="no tiene fecha de baja"
-                                            onChange={date => setDownDate(date as Date)}/>
-                            </div>
-                            <div className="col-12   mb-3">
-                                <label htmlFor="downcomments" className="form-label">Comentarios de baja</label>
-                                <textarea className="form-control"
-                                          id="downcomments"
-                                          rows={3}
-                                          value={downComments}
-                                          onChange={e => setDownComments(e.target.value)}/>
-                            </div>
-                        </>
-                    ) : null
-                }
+                </ProcessInformation>
+
 
             </form>
             <div className="d-flex align-items-start justify-content-start">
-                <button type="button" className="btn btn-outline-primary mb-3 me-3"
-                        onClick={saveChangesHandler} disabled={props.buttonDisabled}>
-                    Guardar cambios
-                </button>
                 {
                     success ? <div className="alert alert-success" role="alert">
                         Cambios guardados exitosamente

@@ -1,11 +1,12 @@
 import * as React from "react";
 import moment from "moment";
 import {Dispatch} from "react";
+import {Action} from "../MainReducer";
 
-export const initialState = {
+export const authInitialState = {
     loading: false,
     loggedIn: false,
-    dispatch: () => null
+    authDispatch: () => null
 }
 
 export interface AuthStateI {
@@ -15,7 +16,7 @@ export interface AuthStateI {
     officeUuid?: string;
     userUuid?: string;
     userType?: string;
-    dispatch: Dispatch<AuthAction>
+    authDispatch: Dispatch<Action>
 }
 
 interface successResponse {

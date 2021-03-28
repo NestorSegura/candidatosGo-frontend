@@ -9,11 +9,12 @@ const Login: React.FC = () => {
     const [password, setPassword] = useState<string>('');
     const [firstLoad, setFirstLoad] = useState<boolean>(true);
 
-    const {dispatch, error} = useContext(MainContext);
+    const {authDispatch, error, officeDispatch} = useContext(MainContext);
 
     const handleLogin = async () => {
-        dispatch && dispatch({
-            type: 'LOGIN_REQUEST'
+        authDispatch && authDispatch({
+            type: 'LOGIN_REQUEST',
+            payload: null
         })
         AuthService.login(username, password)
             .then(async (response) => {
@@ -27,7 +28,7 @@ const Login: React.FC = () => {
                     localStorage.setItem('usertype', response.user.user_type);
                     localStorage.setItem('office_id', response.user.office_id);
 
-                    dispatch && dispatch({
+                    authDispatch && authDispatch({
                         type: 'LOGIN_SUCCESS',
                         payload: {
                             success: true,
@@ -37,9 +38,14 @@ const Login: React.FC = () => {
                             userType: response.user.user_type
                         }
                     })
+                    officeDispatch && officeDispatch({
+                        type: 'OFFICE_INIT',
+                        payload: null
+                    })
+
                 } else {
                     response = response as ErrorMessageResponse
-                    dispatch && dispatch({
+                    authDispatch && authDispatch({
                         type: 'LOGIN_ERROR',
                         payload: {
                             error: response.msg
@@ -49,7 +55,7 @@ const Login: React.FC = () => {
             })
             .catch(error => {
                 console.error(error);
-                dispatch && dispatch({
+                authDispatch && authDispatch({
                     type: 'LOGIN_ERROR',
                     payload: {error: `TECHNICAL ERROR ${error}`}
                 })
@@ -58,7 +64,7 @@ const Login: React.FC = () => {
 
     useEffect(() => {
         if (firstLoad) {
-            dispatch && dispatch({type: 'INIT_STATE'})
+            authDispatch && authDispatch({type: 'INIT_STATE', payload: null})
             setFirstLoad(false);
         }
     }, [firstLoad])

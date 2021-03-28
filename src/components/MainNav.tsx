@@ -1,26 +1,32 @@
 import * as React from "react";
-import {useContext, useEffect} from "react";
+import {useContext, useEffect, useState} from "react";
 import {Redirect, useHistory} from "react-router-dom";
 import AuthService from "../services/auth.service";
 import {MainContext} from "../store/MainReducer";
+import OfficeService from "../services/office.service";
 
 const MainNav: React.FC = () => {
-    const {loggedIn, userType, officeUuid, dispatch} = useContext(MainContext);
+    const {loggedIn, userType, officeUuid, authDispatch, officeDispatch, office} = useContext(MainContext);
 
     const history = useHistory();
 
     const logOutHandler = () => {
-        dispatch && dispatch({
-            type: 'LOGIN_REQUEST'
+        authDispatch && authDispatch({
+            type: 'LOGIN_REQUEST',
+            payload: null
+        })
+        officeDispatch && officeDispatch({
+            type: 'OFFICE_REMOVE',
+            payload: null
         })
         AuthService.logout()
-            .then(() => dispatch && dispatch({
+            .then(() => authDispatch && authDispatch({
                 type: 'LOGOUT_SUCCESS',
                 payload: {
                     login: false,
                 }
             }))
-            .catch(error => dispatch && dispatch({
+            .catch(error => authDispatch && authDispatch({
                 type: 'LOGOUT_FAIL',
                 payload: {
                     login: false,
@@ -67,10 +73,39 @@ const MainNav: React.FC = () => {
         redirectHandler();
     }, [loggedIn, userType, officeUuid])
 
+
+    useEffect(() => {
+        if (loggedIn && officeUuid && officeDispatch) {
+            officeDispatch({
+                type: 'OFFICE_REQUEST',
+                payload: null
+            })
+            OfficeService.getOfficeByUuid(officeUuid)
+                .then(res => {
+
+                    officeDispatch({
+                        type: 'OFFICE_SUCCESS',
+                        payload: {
+                            name: res.parsedBody?.data.name,
+                        }
+                    })
+
+                })
+                .catch(error => officeDispatch({
+                    type: 'OFFICE_FAIL',
+                    payload: {
+                        error
+                    }
+
+                }))
+        }
+    }, [loggedIn, officeUuid])
+
+
     return (
         <nav className="navbar navbar-expand-lg navbar-light bg-light">
             <div className="container-fluid">
-                <h3>CANDIDATOSGO {false ? <small> ( {null} )</small> : null}</h3>
+                <h3>CANDIDATOSGO {office ? <small> ( {office} )</small> : null}</h3>
                 {
                     loggedIn ? (
                         <div className="d-flex">

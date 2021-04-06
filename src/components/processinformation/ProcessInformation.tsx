@@ -16,7 +16,7 @@ const ProcessInformation: React.FC<ProcessInformationCardProps> = (props) => {
                 <div className="card-body d-flex justify-content-between align-items-center">
                     {
                         editMode ? <div className="d-flex align-items-center">{props.children}</div> : (
-                            <div className="d-flex align-items-center">
+                            <div className="d-flex align-items-center flex-sm-column">
                                 <p className="me-3 mb-0">{props.label}</p>
                                 <p className="mb-0">{props.value}</p>
                             </div>

@@ -105,10 +105,14 @@ const MainNav: React.FC = () => {
     return (
         <nav className="navbar navbar-expand-lg navbar-light bg-light">
             <div className="container-fluid">
-                <h3>CANDIDATOSGO {office ? <small> ( {office} )</small> : null}</h3>
+                <div className="d-flex align-center flex-column">
+                    <h3>CANDIDATOSGO</h3>
+                    {office ? <small> ( {office} )</small> : null}
+                </div>
+
                 {
                     loggedIn ? (
-                        <div className="d-flex">
+                        <div>
                             <button className="btn btn-outline-danger" type="button" onClick={logOutHandler}>logout
                             </button>
                         </div>

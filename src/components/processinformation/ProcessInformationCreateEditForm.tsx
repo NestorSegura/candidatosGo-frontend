@@ -97,8 +97,12 @@ const ProcessInformationCreateEditForm: React.FC<ProcessInformationCreateEditFor
         }
     }
 
+    const toDateString = (date?: Date) => {
+        return date ? moment(date).format('DD MMM yyyy HH:mm').toString() : 'sin fecha aún';
+    }
+
     return (
-        <div className="pe-5">
+        <div className="pe-md-5">
             <h3 className="mb-3">Información del proceso</h3>
             <form className="mb-4">
                 <ProcessInformation
@@ -135,7 +139,7 @@ const ProcessInformationCreateEditForm: React.FC<ProcessInformationCreateEditFor
 
                 <ProcessInformation onSaveHandler={saveChangesHandler}
                                     label='Fecha de entrevista:'
-                                    value={interviewDate?.toISOString() ?? 'sin fecha aún'}
+                                    value={toDateString(interviewDate)}
                                     changesAllow={!props.buttonDisabled}>
                     <label htmlFor="mail" className="form-label me-3 mb-0">Fecha de entrevista: </label>
                     <DatePicker selected={interviewDate}
@@ -194,7 +198,7 @@ const ProcessInformationCreateEditForm: React.FC<ProcessInformationCreateEditFor
 
                 <ProcessInformation onSaveHandler={saveChangesHandler}
                                     label='Fecha de día de observación:'
-                                    value={observationDay?.toISOString() ?? 'sin fecha aún'}
+                                    value={toDateString(observationDay)}
                                     changesAllow={!props.buttonDisabled}>
                     <label htmlFor="mail" className="form-label me-3">Fecha de día de observación: </label>
                     <DatePicker selected={observationDay}
@@ -352,7 +356,7 @@ const ProcessInformationCreateEditForm: React.FC<ProcessInformationCreateEditFor
             </form>
             <div className="d-flex align-items-start justify-content-start">
                 {
-                    success ? <div className="alert alert-success" role="alert">
+                    success ? <div className="alert alert-success position-fixed fixed-top" role="alert">
                         Cambios guardados exitosamente
                     </div> : null
                 }
